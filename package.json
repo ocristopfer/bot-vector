@@ -1,0 +1,25 @@
+{
+  "name": "botcda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "bin": "bin.js",
+  "dependencies": {
+    "discord.js": "^11.6.4",
+    "ffmpeg-binaries": "^4.0.0",
+    "forever-monitor": "^1.7.2",
+    "opusscript": "0.0.7",
+    "youtube-v3-api": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "pkg": {
+    "assets": [
+      "./node_modules/**"
+    ]
+  },
+  "author": "",
+  "license": "ISC"
+}
