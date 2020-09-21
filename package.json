@@ -5,11 +5,17 @@
   "main": "main.js",
   "bin": "bin.js",
   "dependencies": {
-    "discord.js": "^11.6.4",
+    "@discordjs/opus": "^0.3.2",
+    "await": "^0.2.6",
+    "discord.js": "^12.3.1",
+    "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^4.0.0",
+    "fluent-ffmpeg": "^2.1.2",
     "forever-monitor": "^1.7.2",
     "opusscript": "0.0.7",
-    "youtube-v3-api": "^1.1.1"
+    "youtube-v3-api": "^1.1.1",
+    "ytdl-core": "^3.2.2",
+    "ytdl-core-discord": "^1.2.2"
   },
   "devDependencies": {},
   "scripts": {

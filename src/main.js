@@ -5,6 +5,8 @@ const config  = require('./config.json');
 const getContents =  require('./getContents.js');
 const client = new Discord.Client();
 const queue = new Map();
+//const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 
 
 client.once('ready', () => {
@@ -159,7 +161,7 @@ async function buscarYoutube(args,message, serverQueue, url){
 
 async function start(message, serverQueue, songInfo){
 	
-	const voiceChannel = message.member.voiceChannel;
+	const voiceChannel = message.member.voice.channel;
 	if (!voiceChannel) return message.channel.send('Você precisar está em um canal de voz para reproduzir musicas!');
 	const permissions = voiceChannel.permissionsFor(message.client.user);
 	if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
@@ -168,8 +170,8 @@ async function start(message, serverQueue, songInfo){
 
 
 	const song = {
-		title: songInfo.title,
-		url: songInfo.video_url,
+		title: songInfo.videoDetails.title,
+		url: songInfo.videoDetails.video_url,
 	};
 
 	if (!serverQueue) {
@@ -205,13 +207,13 @@ async function start(message, serverQueue, songInfo){
 }
 
 async function skip(message, serverQueue) {
-	if (!message.member.voiceChannel) return message.channel.send('Você precisar está em um canal de voz para reproduzir musicas!');
+	if (!message.member.voice.channel) return message.channel.send('Você precisar está em um canal de voz para reproduzir musicas!');
 	if (!serverQueue) return message.channel.send('Não há musica para ser pulada!');
 	serverQueue.connection.dispatcher.end();
 }
 
 async function stop(message, serverQueue) {
-	if (!message.member.voiceChannel) return message.channel.send('Você precisar está em um canal de voz para reproduzir musicas!');
+	if (!message.member.voice.channel) return message.channel.send('Você precisar está em um canal de voz para reproduzir musicas!');
 	if (!serverQueue) return message.channel.send('Não há musica para ser pausada!');
 	serverQueue.songs = [];
 	serverQueue.connection.dispatcher.end();
@@ -222,12 +224,16 @@ async function play(guild, song) {
 	const serverQueue = queue.get(guild.id);
 
 	if (!song) {
-		serverQueue.voiceChannel.leave();
+		serverQueue.voice.channel.leave();
 		queue.delete(guild.id);
 		return;
 	}
 	
-	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+
+	
+	//const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+	//const dispatcher = serverQueue.connection.playOpusStream(await ytdl(song.url))
+	const dispatcher = serverQueue.connection.play(await ytdl(song.url), { type: 'opus' })	
 		.on('end', () => {
 			console.log('Musica encerrada!');
 			serverQueue.songs.shift();
