@@ -4,8 +4,8 @@ const config = require('./config.json');
 const getContents = require('./getContents.js');
 const client = new Discord.Client();
 const queue = new Map();
-//const ytdl = require('ytdl-core');
-const ytdl = require('ytdl-core-discord');
+const ytdl = require('ytdl-core');
+//const ytdl = require('ytdl-core-discord');
 const { futimesSync } = require('fs');
 const { count } = require('console');
 
@@ -222,9 +222,15 @@ async function start(message, serverQueue, songInfo) {
 async function skip(message, serverQueue) {
 	if (!message.member.voice.channel) return message.channel.send('Você precisar está em um canal de voz para reproduzir musicas!');
 	if (!serverQueue) return message.channel.send('Não há musica para ser pulada!');
-
+	serverQueue.connection.dispatcher.destroy();
+	proximaMusica(message.guild, serverQueue);
+	/*
 	try {
-		serverQueue.connection.dispatcher.end();
+		
+		serverQueue.songs.shift();
+		play(guild, serverQueue.songs[0]);
+
+	
 
 		if (serverQueue) {
 			if (serverQueue.song && serverQueue.song.length == 0) {
@@ -233,7 +239,7 @@ async function skip(message, serverQueue) {
 		}
 	} catch (error) {
 
-	}
+	}*/
 
 
 }
@@ -243,7 +249,7 @@ async function stop(message, serverQueue) {
 	if (!serverQueue) return message.channel.send('Não há musica para ser pausada!');
 	serverQueue.songs = [];
 	try {
-		serverQueue.connection.dispatcher.end();
+		serverQueue.connection.dispatcher.destroy();
 		desconectar(message.guild);
 	} catch (error) {
 
@@ -279,27 +285,34 @@ async function listarMusicas(message, serverQueue) {
 }
 
 async function play(guild, song) {
-
 	const serverQueue = queue.get(guild.id);
-
 	if (!song) {
 		desconectar(guild);
-	}
+		return;
+	} else {
 
-	//const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
-	//const dispatcher = serverQueue.connection.playOpusStream(await ytdl(song.url))
-	const dispatcher = serverQueue.connection.play(await ytdl(song.url), { type: 'opus' })
-		.on('end', () => {
-			console.log('Musica encerrada!');
-			serverQueue.songs.shift();
-			play(guild, serverQueue.songs[0]);
-		})
-		.on('error', error => {
-			console.error(error);
-		});
-	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+		//const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+		//const dispatcher = serverQueue.connection.playOpusStream(await ytdl(song.url))
+		const dispatcher = serverQueue.connection.play(await ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio',
+		highWaterMark: 1 << 25 }))
+			.on('finish', () => {
+				proximaMusica(guild, serverQueue);
+			}).on('end', () => {
+				proximaMusica(guild, serverQueue);
+			})
+			.on('error', error => {
+				console.error(error);
+				proximaMusica(guild, serverQueue);
+			});
+		dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+	}
 }
 
+async function proximaMusica(guild, serverQueue) {
+	console.log('Musica encerrada!');
+	serverQueue.songs.shift();
+	play(guild, serverQueue.songs[0]);
+}
 
 tentativas = 0;
 function iniciarBot() {
