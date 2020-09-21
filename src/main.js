@@ -36,8 +36,6 @@ client.on('guildMemberAdd', async member => {
 });
 
 client.on('voiceStateUpdate', async (oldMember, newMember) => {
-	console.log(oldMember)
-
 	let oldUserChannel = newMember.guild.channels.cache.get(oldMember.channelID)
 	let newUserChannel = newMember.guild.channels.cache.get(newMember.channelID);
 	let mensagem = "";
@@ -140,6 +138,7 @@ async function execute(message, serverQueue) {
 
 async function getVideoInfo(message, serverQueue, url) {
 	ytdl.getInfo(url).then((data) => {
+		console.log('iniciar')
 		start(message, serverQueue, data)
 	}, (err) => {
 		console.log(err);
@@ -170,8 +169,6 @@ async function buscarYoutube(args, message, serverQueue, url) {
 			errosYoutube = errosYoutube + 1;
 			buscarYoutube(args, message, serverQueue, url)
 		}
-
-
 	});
 }
 
@@ -305,7 +302,7 @@ async function play(guild, song) {
 
 
 tentativas = 0;
-function start() {
+function iniciarBot() {
 	try {
 		if (tentativas < 3) {
 			tentativas = 0;
@@ -313,8 +310,8 @@ function start() {
 		}
 	} catch (error) {
 		tentativas += 1;
-		start()
+		iniciarBot()
 	}
 }
 
-start();
+iniciarBot();
