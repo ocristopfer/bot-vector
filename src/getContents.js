@@ -1,4 +1,8 @@
 module.exports = {
+/**
+ * Faz a busca na pagina.
+ * @param {*} url 
+ */
 getScript: async function getScript(url){
     return new Promise((resolve, reject) => {
         const http      = require('http'),
@@ -29,6 +33,10 @@ getScript: async function getScript(url){
     });
 },
 
+/**
+ * Chama a função de carregar a pagina passando o argumento de busca para conseguir captura o id do video.
+ * @param {*} args 
+ */
 buscarYouTubeNoApi: async function buscarYouTubeNoApi(args){
         var result = await this.getScript("https://www.youtube.com/results?search_query=" + args);
         var element = "";
