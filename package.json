@@ -1,7 +1,7 @@
 {
   "name": "botcda",
   "version": "1.0.0",
-  "description": "",
+  "description": "Um simples bot para discord",
   "main": "main.js",
   "bin": "bin.js",
   "dependencies": {
@@ -29,6 +29,6 @@
       "./node_modules/**"
     ]
   },
-  "author": "",
+  "author": "@ocristopfer",
   "license": "ISC"
 }

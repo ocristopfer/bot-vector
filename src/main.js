@@ -38,14 +38,14 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
 
 	if (oldUserChannel !== undefined) {
 		mensagem = oldMember.member.displayName + ' Saiu do canal de voz'
-		client.channels.cache.filter((channel) => channel.name === 'chat' ||  channel.name === 'geral').first().send(mensagem);
+		client.channels.cache.filter((channel) => channel.name === 'chat' || channel.name === 'geral').first().send(mensagem);
 	}
 
 	if (newUserChannel !== undefined) {
 		mensagem = newMember.member.displayName + ' Entrou no canal de voz';
-		client.channels.cache.filter((channel) => channel.name === 'chat' ||  channel.name === 'geral').first().send(mensagem);
-	} 
-	
+		client.channels.cache.filter((channel) => channel.name === 'chat' || channel.name === 'geral').first().send(mensagem);
+	}
+
 })
 
 client.on('message', async message => {
@@ -105,7 +105,9 @@ async function limparChat(message) {
 		});
 		message.channel.bulkDelete(fetched).then(() => {
 			message.channel.send('Efetuada a limpeza do chat!');
-		}).catch(erro => {console.log(erro)});
+		}).catch(erro => {
+			console.log(erro)
+		});
 	} catch (error) {
 		message.channel.send('Erro ao tentar limpar chat!')
 	}
@@ -258,6 +260,7 @@ async function proximaMusica(guild, serverQueue) {
 }
 
 tentativas = 0;
+
 function iniciarBot() {
 	try {
 		if (tentativas < 3) {
@@ -265,6 +268,7 @@ function iniciarBot() {
 			client.login(config.token);
 		}
 	} catch (error) {
+		console.log('erro', error)
 		tentativas += 1;
 		iniciarBot()
 	}
