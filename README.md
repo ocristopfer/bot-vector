@@ -1,2 +1,2 @@
 # botcda
-Bot para tocar musicas do youtube no discord
+Bot da casa dos amigos :D
