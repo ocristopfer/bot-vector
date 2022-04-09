@@ -183,13 +183,6 @@ const exit = async (message, serverQueue) => {
   }
 };
 
-const listEmojis = async (message, serverQueue) => {
-  console.log(message.guild.emojis.cache);
-  const ayy = client.emojis.cache.find((emoji) => emoji.name === "ayy");
-  message.reply(`${ayy} LMAO`);
-  message.channel.send("<:bat_food_full:786954379223367710>");
-};
-
 //Metodos Auxiliares
 const getVideoInfo = async (message, serverQueue, url) => {
   ytdl.getInfo(url).then(
