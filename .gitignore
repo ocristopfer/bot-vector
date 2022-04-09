@@ -33,3 +33,4 @@ packages/
 #node modules
 node_modules/
 packages-lock.json
+src/config.json
