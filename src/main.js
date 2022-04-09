@@ -340,11 +340,6 @@ const Comandos = [
     method: ping,
   },
   {
-    nome: "listemojis",
-    description: "Retorna os emojis disponiveis",
-    method: listEmojis,
-  },
-  {
     nome: "help",
     description: "Lista todos os comando disponiveis",
     method: help,
