@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const queue = new Map();
 const ytdl = require("ytdl-core");
 const cli = require("nodemon/lib/cli");
-const getContents = require("./getContents.js");
+const getContents = new (require("./getContents.js"))();
 let config = null;
 try {
   config = require("./config.json");

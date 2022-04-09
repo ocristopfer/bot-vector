@@ -1,9 +1,10 @@
-module.exports = {
+module.exports = function () {
   /**
    * Faz a busca na pagina.
    * @param {*} url
+   * @returns promisse
    */
-  getScript: async function getScript(url) {
+  this.getScript = async (url) => {
     return new Promise((resolve, reject) => {
       const http = require("http"),
         https = require("https");
@@ -32,29 +33,23 @@ module.exports = {
           reject(err);
         });
     });
-  },
+  };
 
   /**
    * Chama a função de carregar a pagina passando o argumento de busca para conseguir captura o id do video.
    * @param {*} args
+   * @returns string
    */
-  buscarYouTubeNoApi: async function buscarYouTubeNoApi(args) {
-    var result = await this.getScript(
-      "https://www.youtube.com/results?search_query=" + args.replace(/\s/g, '+')
-    );
-    var element = "";
-    var capturou = false;
-    for (
-      index = result.indexOf("/watch?v="); index < result.indexOf("/watch?v=") + 30; index++
-    ) {
-      if (capturou == false) {
-        if (result[index] != '"') {
-          element += result[index];
-        } else {
-          capturou = true;
-        }
-      }
-    }
-    return "https://www.youtube.com" + element;
-  },
+  this.buscarYouTubeNoApi = async (args) => {
+    return await this.getScript(
+      "https://www.youtube.com/results?search_query=" + args.replace(/\s/g, "+")
+    )
+      .then((resolve) => {
+        var idVideo = resolve.match(/.watch.v=[^"]*/gm)[0];
+        return `https://www.youtube.com${idVideo}`;
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  };
 };
