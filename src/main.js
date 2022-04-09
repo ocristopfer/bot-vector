@@ -1,10 +1,13 @@
 const Discord = require("discord.js");
-const config = require("./config.json");
-const getContents = require("./getContents.js");
 const client = new Discord.Client();
 const queue = new Map();
 const ytdl = require("ytdl-core");
 const cli = require("nodemon/lib/cli");
+const getContents = require("./getContents.js");
+let config = null;
+try {
+  config = require("./config.json");
+} catch (error) {}
 
 //Discord events
 client.once("ready", () => {
@@ -351,4 +354,28 @@ const Comandos = [
   },
 ];
 
-client.login(config.token);
+const IniciarCliente = () => {
+  if (config.token !== "") {
+    client.login(config.token);
+  } else {
+    console.log("Configure seu token no aquivo config.json");
+    process.exit(0);
+  }
+};
+
+if (config === null) {
+  var fs = require("fs");
+  var jsonConfig = {
+    prefix: "!",
+    token: "",
+  };
+  fs.writeFile("./src/config.json", JSON.stringify(jsonConfig), function (err) {
+    if (err) {
+      throw err;
+    }
+    config = require("./config.json");
+    IniciarCliente();
+  });
+} else {
+  IniciarCliente();
+}
