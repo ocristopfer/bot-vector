@@ -41,8 +41,6 @@ client.on("voiceStateUpdate", async (oldMember, newMember) => {
 
   if (oldUserChannel !== undefined) {
     usuarioMudouDeCanal(oldMember, false);
-    console.log();
-    // console.log(oldMember.channelID, oldUserChannel.VoiceChannel);
   }
 
   if (newUserChannel !== undefined) {
