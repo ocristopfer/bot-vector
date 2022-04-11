@@ -38,13 +38,14 @@ client.on("voiceStateUpdate", async (oldMember, newMember) => {
   let oldUserChannel = newMember.guild.channels.cache.get(oldMember.channelID);
   let newUserChannel = newMember.guild.channels.cache.get(newMember.channelID);
   let mensagem = "";
+  if (oldUserChannel.name !== newUserChannel.name) {
+    if (oldUserChannel !== undefined) {
+      usuarioMudouDeCanal(oldMember, false);
+    }
 
-  if (oldUserChannel !== undefined) {
-    usuarioMudouDeCanal(oldMember, false);
-  }
-
-  if (newUserChannel !== undefined) {
-    usuarioMudouDeCanal(newMember, true);
+    if (newUserChannel !== undefined) {
+      usuarioMudouDeCanal(newMember, true);
+    }
   }
 });
 
