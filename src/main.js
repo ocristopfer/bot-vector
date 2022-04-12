@@ -4,6 +4,13 @@ const queue = new Map();
 const ytdl = require("ytdl-core");
 const cli = require("nodemon/lib/cli");
 const getContents = new (require("./getContents.js"))();
+const fileName = new Date()
+  .toLocaleDateString()
+  .trim()
+  .replace(/[^\w\s]/gi, "_");
+console.log(fileName);
+const logHandler = new (require("./logHandler"))(fileName);
+
 let config = null;
 try {
   config = require("./config.json");
@@ -11,41 +18,33 @@ try {
 
 //Discord events
 client.once("ready", () => {
-  console.log("Iniciado!");
+  logHandler.log("Iniciado");
 });
 
 client.once("reconnecting", () => {
-  console.log("Reconectando!");
+  logHandler.log("Reconectando!");
 });
 
 client.once("disconnect", () => {
-  console.log("Desconectado!");
+  logHandler.log("Desconectado!");
 });
 
 client.on("guildMembersChunk", async (member) => {
-  console.log("disponivel");
+  logHandler.log("disponivel");
 });
 
 client.on("guildMemberAvailable", async (member) => {
-  console.log("disponivel");
+  logHandler.log("disponivel");
 });
 
 client.on("guildMemberAdd", async (member) => {
-  member.guild.channels.get("channelID").send("Welcome");
+  member.guild.channels.get("channelID").send("Bem Vindo :D");
 });
 
 client.on("voiceStateUpdate", async (oldMember, newMember) => {
-  let oldUserChannel = newMember.guild.channels.cache.get(oldMember.channelID);
-  let newUserChannel = newMember.guild.channels.cache.get(newMember.channelID);
-  let mensagem = "";
-  if (oldUserChannel.name !== newUserChannel.name) {
-    if (oldUserChannel !== undefined) {
-      usuarioMudouDeCanal(oldMember, false);
-    }
-
-    if (newUserChannel !== undefined) {
-      usuarioMudouDeCanal(newMember, true);
-    }
+  if (oldMember.channelID !== newMember.channelID) {
+    usuarioMudouDeCanal(oldMember, false);
+    usuarioMudouDeCanal(newMember, true);
   }
 });
 
@@ -64,7 +63,7 @@ client.on("message", async (message) => {
       }
     });
   } catch (error) {
-    console.log(comando, error);
+    logHandler.log(comando, error);
   }
 });
 
@@ -106,7 +105,9 @@ const stop = async (message, serverQueue) => {
   try {
     serverQueue.connection.dispatcher.destroy();
     desconectar(message);
-  } catch (error) {}
+  } catch (error) {
+    logHandler.log(error);
+  }
 };
 
 const listar = async (message, serverQueue) => {
@@ -151,9 +152,10 @@ const clearchat = async (message, serverQueue) => {
         message.channel.send("Efetuada a limpeza do chat!");
       })
       .catch((erro) => {
-        console.log(erro);
+        logHandler.log(erro);
       });
   } catch (error) {
+    logHandler.log(error);
     message.channel.send("Erro ao tentar limpar chat!");
   }
 };
@@ -192,7 +194,7 @@ const getVideoInfo = async (message, serverQueue, url) => {
       start(message, serverQueue, data);
     },
     (err) => {
-      console.log(err);
+      logHandler.log(err);
       return message.channel.send("Erro ao tentar buscar video");
     }
   );
@@ -234,10 +236,10 @@ const start = async (message, serverQueue, songInfo) => {
       var connection = await voiceChannel.join();
       queueContruct.connection = connection;
       message.channel.send(`Reproduzindo: ${song.title}!`);
-      console.log(`Reproduzindo: ${song.title}!`);
+      logHandler.log(`Reproduzindo: ${song.title}!`);
       play(message.guild, queueContruct.songs[0]);
     } catch (err) {
-      console.log(err);
+      logHandler.log(err);
       queue.delete(message.guild.id);
       return message.channel.send(err);
     }
@@ -268,7 +270,7 @@ const play = async (guild, song) => {
         proximaMusica(guild, serverQueue);
       })
       .on("error", (error) => {
-        console.error(error);
+        logHandler.error(error);
         proximaMusica(guild, serverQueue);
       });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
@@ -276,7 +278,7 @@ const play = async (guild, song) => {
 };
 
 const proximaMusica = async (guild, serverQueue) => {
-  console.log("Musica encerrada!");
+  logHandler.log("Musica encerrada!");
   serverQueue.songs.shift();
   play(guild, serverQueue.songs[0]);
 };
@@ -296,7 +298,7 @@ const usuarioMudouDeCanal = (oMember, bFlEntrou) => {
         .send(mensagem);
     })
     .catch((error) => {
-      console.log(error);
+      logHandler.log(error);
     });
 };
 
@@ -337,11 +339,6 @@ const Comandos = [
     method: ping,
   },
   {
-    nome: "ping",
-    description: "Retorna o tempo de resposta do bot",
-    method: ping,
-  },
-  {
     nome: "help",
     description: "Lista todos os comando disponiveis",
     method: help,
@@ -357,7 +354,7 @@ const IniciarCliente = () => {
   if (config.token !== "") {
     client.login(config.token);
   } else {
-    console.log("Configure seu token no aquivo config.json");
+    logHandler.log("Configure seu token no aquivo config.json");
     process.exit(0);
   }
 };

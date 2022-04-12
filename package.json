@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "node ./src/main.js",
-    "debug": "nodemon ./src/main.js",
+    "debug": "nodemon --ignore ./src/logs/ ./src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pkg": {
