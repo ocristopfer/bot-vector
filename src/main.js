@@ -8,7 +8,6 @@ const fileName = new Date()
   .toLocaleDateString()
   .trim()
   .replace(/[^\w\s]/gi, "_");
-console.log(fileName);
 const logHandler = new (require("./logHandler"))(fileName);
 
 let config = null;
