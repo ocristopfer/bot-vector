@@ -1,5 +1,7 @@
 var path = require("path");
 global.appRoot = path.resolve(__dirname);
+require("dotenv").config();
+console.log(process.env);
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const queue = new Map();
@@ -11,7 +13,6 @@ const fileName = new Date()
   .replace(/[^\w\s]/gi, "_");
 
 const logHandler = new (require(`${appRoot}/logHandler`))(fileName);
-const configDiscord = new (require(`${appRoot}/config.js`))(logHandler);
 const getContents = new (require(`${appRoot}/getContents.js`))();
 
 //Discord events
@@ -47,10 +48,11 @@ client.on("voiceStateUpdate", async (oldMember, newMember) => {
 });
 
 client.on("message", async (message) => {
+  let prefix = process.env.PREFIX;
   if (message.author.bot) return;
-  if (!message.content.startsWith(config.prefix)) return;
+  if (!message.content.startsWith(prefix)) return;
   logHandler.log(`Comando informado: ${message}`);
-  let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+  let args = message.content.slice(prefix.length).trim().split(/ +/g);
   let comando = args.shift().toLocaleLowerCase();
   let serverQueue = queue.get(message.guild.id);
 
@@ -352,9 +354,9 @@ const Comandos = [
 ];
 
 const IniciarCliente = () => {
-  let config = configDiscord.GetConfig();
-  if (config.token !== "") {
-    client.login(config.token);
+  let token = process.env.TOKEN;
+  if (token !== "") {
+    client.login(token);
   } else {
     logHandler.log("Configure seu token no aquivo config.json");
     process.exit(0);

@@ -7,6 +7,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.5.3",
+    "dotenv": "^16.0.0",
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^5.0.0",
     "nodemon": "^2.0.15",
