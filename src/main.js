@@ -49,7 +49,7 @@ client.on("voiceStateUpdate", async (oldMember, newMember) => {
 client.on("message", async (message) => {
   if (message.author.bot) return;
   if (!message.content.startsWith(config.prefix)) return;
-
+  logHandler.log(`Comando informado: ${message}`);
   let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   let comando = args.shift().toLocaleLowerCase();
   let serverQueue = queue.get(message.guild.id);
@@ -61,7 +61,7 @@ client.on("message", async (message) => {
       }
     });
   } catch (error) {
-    logHandler.log(comando, error);
+    logHandler.log(comando + error);
   }
 });
 
@@ -243,6 +243,7 @@ const start = async (message, serverQueue, songInfo) => {
     }
   } else {
     serverQueue.songs.push(song);
+    logHandler.log(`${song.title} foi adicionado a fila!`);
     return message.channel.send(`${song.title} foi adicionado a fila!`);
   }
 };
@@ -262,13 +263,15 @@ const play = async (guild, song) => {
         })
       )
       .on("finish", () => {
+        logHandler.log(`Musica ${song.title} encerrada!`);
         proximaMusica(guild, serverQueue);
       })
       .on("end", () => {
+        logHandler.log(`Musica ${song.title} encerrada!`);
         proximaMusica(guild, serverQueue);
       })
       .on("error", (error) => {
-        logHandler.error(error);
+        logHandler.log(error);
         proximaMusica(guild, serverQueue);
       });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
@@ -276,7 +279,6 @@ const play = async (guild, song) => {
 };
 
 const proximaMusica = async (guild, serverQueue) => {
-  logHandler.log("Musica encerrada!");
   serverQueue.songs.shift();
   play(guild, serverQueue.songs[0]);
 };
@@ -296,7 +298,8 @@ const usuarioMudouDeCanal = (oMember, bFlEntrou) => {
         .send(mensagem);
     })
     .catch((error) => {
-      logHandler.log(error);
+      //problema na api relata erro toda hora mesmo com a rotina funcionando
+      //logHandler.log(error);
     });
 };
 
