@@ -1,19 +1,18 @@
+var path = require("path");
+global.appRoot = path.resolve(__dirname);
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const queue = new Map();
 const ytdl = require("ytdl-core");
 const cli = require("nodemon/lib/cli");
-const getContents = new (require("./getContents.js"))();
 const fileName = new Date()
   .toLocaleDateString()
   .trim()
   .replace(/[^\w\s]/gi, "_");
-const logHandler = new (require("./logHandler"))(fileName);
 
-let config = null;
-try {
-  config = require("./config.json");
-} catch (error) {}
+const logHandler = new (require(`${appRoot}/logHandler`))(fileName);
+const configDiscord = new (require(`${appRoot}/config.js`))(logHandler);
+const getContents = new (require(`${appRoot}/getContents.js`))();
 
 //Discord events
 client.once("ready", () => {
@@ -350,6 +349,7 @@ const Comandos = [
 ];
 
 const IniciarCliente = () => {
+  let config = configDiscord.GetConfig();
   if (config.token !== "") {
     client.login(config.token);
   } else {
@@ -358,19 +358,4 @@ const IniciarCliente = () => {
   }
 };
 
-if (config === null) {
-  var fs = require("fs");
-  var jsonConfig = {
-    prefix: "!",
-    token: "",
-  };
-  fs.writeFile("./src/config.json", JSON.stringify(jsonConfig), function (err) {
-    if (err) {
-      throw err;
-    }
-    config = require("./config.json");
-    IniciarCliente();
-  });
-} else {
-  IniciarCliente();
-}
+IniciarCliente();
