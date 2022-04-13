@@ -17,8 +17,8 @@
     "ytdl-core-discord": "^1.2.2"
   },
   "scripts": {
-    "start": "node ./src/main.js",
-    "debug": "nodemon --ignore ./src/logs/ ./src/main.js",
+    "start": "node src/app.js",
+    "debug": "nodemon --ignore src/logs/ src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pkg": {
