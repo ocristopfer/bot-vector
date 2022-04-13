@@ -1,7 +1,6 @@
 var path = require("path");
 global.appRoot = path.resolve(__dirname);
 require("dotenv").config();
-console.log(process.env);
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const queue = new Map();
