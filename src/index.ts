@@ -8,12 +8,13 @@ const queue = new Map();
 const logHandler = new LogHandler();
 
 const app = express();
+const port = process.env.PREFIX || 3000;
 
 app.get("/", (req, res) => {
   res.send("Well done!");
 });
 
-app.listen(80, () => {
+app.listen(port, () => {
   console.log("The application is listening on port 3000!");
 });
 
