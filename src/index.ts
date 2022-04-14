@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Client } from "discord.js";
+import { Client, Message } from "discord.js";
 import LogHandler from "./handlers/logHandler.js";
 import MusicHandler from "./handlers/musicHandler.js";
 import * as express from "express";
@@ -30,8 +30,8 @@ client.once("ready", () => {
   logHandler.log("Iniciado");
 });
 
-client.on("guildMemberAdd", async (member) => {
-  //member.guild.channels.get("channelID").send("Bem Vindo :D");
+client.on("guildMemberAdd", async (member: any) => {
+  member.guild.channels.get("channelID").send("Bem Vindo :D");
 });
 
 client.on("voiceStateUpdate", async (oldMember, newMember) => {
@@ -42,7 +42,7 @@ client.on("voiceStateUpdate", async (oldMember, newMember) => {
 });
 
 client.on("message", async (message) => {
-  let prefix = process.env.PREFIX;
+  let prefix = process.env.PREFIX || "!";
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
   logHandler.log(`Comando informado: ${message}`);
@@ -62,26 +62,26 @@ client.on("message", async (message) => {
 });
 
 //Comandos
-const execute = async (message, serverQueue) => {
+const execute = async (message: Message, serverQueue) => {
   return new MusicHandler(queue, desconectar).play(message, serverQueue);
 };
 
-const skip = async (message, serverQueue) => {
+const skip = async (message: Message, serverQueue) => {
   return new MusicHandler(queue, desconectar).skip(message, serverQueue);
 };
 
-const stop = async (message, serverQueue) => {
+const stop = async (message: Message, serverQueue) => {
   return new MusicHandler(queue, desconectar).stop(message, serverQueue);
 };
 
-const listar = async (message, serverQueue) => {
+const listar = async (message: Message, serverQueue) => {
   return new MusicHandler(queue, desconectar).listarMusicas(
     message,
     serverQueue
   );
 };
 
-const desconectar = async (message, serverQueue) => {
+const desconectar = async (message: Message, serverQueue) => {
   let guild = message.guild != undefined ? message.guild : message;
   serverQueue = queue.get(guild.id);
   if (serverQueue != undefined) {
@@ -91,7 +91,7 @@ const desconectar = async (message, serverQueue) => {
   return;
 };
 
-const clearchat = async (message, serverQueue) => {
+const clearchat = async (message: any) => {
   if (!message.member.hasPermission("ADMINISTRATOR")) {
     return;
   }
@@ -104,38 +104,38 @@ const clearchat = async (message, serverQueue) => {
     message.channel
       .bulkDelete(fetched)
       .then(() => {
-        message.channel.send("Efetuada a limpeza do chat!");
+        message.reply("Efetuada a limpeza do chat!");
       })
       .catch((erro) => {
         logHandler.log(erro);
       });
   } catch (error) {
     logHandler.log(error);
-    message.channel.send("Erro ao tentar limpar chat!");
+    message.reply("Erro ao tentar limpar chat!");
   }
 };
 
-const ping = async (message, serverQueue) => {
-  message.channel.send(
+const ping = async (message: Message) => {
+  message.reply(
     `🏓Latency is ${
       Date.now() - message.createdTimestamp
     }ms. API Latency is ${Math.round(client.ws.ping)}ms`
   );
 };
 
-const help = async (message, serverQueue) => {
+const help = async (message: Message) => {
   let help = "Comandos: \n";
   Comandos.forEach((comand) => {
     help += `${comand.nome}: ${comand.description} \n`;
   });
-  message.channel.send(help);
+  message.reply(help);
 };
 
-const exit = async (message, serverQueue) => {
+const exit = async (message: Message) => {
   if (message.author.id === "220610573853917186") {
-    message.channel
-      .send("O bot foi encerrado!")
-      .then((data) => {
+    message
+      .reply("O bot foi encerrado!")
+      .then(() => {
         return process.exit(22);
       })
       .catch();
@@ -143,11 +143,12 @@ const exit = async (message, serverQueue) => {
 };
 
 //Metodos Auxiliares
-const usuarioMudouDeCanal = (oMember, bFlEntrou) => {
+const usuarioMudouDeCanal = (oMember: any, bFlEntrou: boolean) => {
+  if (oMember.id === "610170869339390035") return;
   client.channels
     .fetch(oMember.channelID)
     .then((resolve) => {
-      let mensagem = `${oMember.member.displayName} ${
+      let mensagem = `${oMember.member} ${
         bFlEntrou ? "Entrou" : "Saiu"
       } do canal de voz ${resolve}`;
       oMember.guild.channels.cache
@@ -212,7 +213,7 @@ const Comandos = [
 ];
 
 const IniciarCliente = () => {
-  let token = process.env.TOKEN;
+  let token = process.env.TOKEN || "";
   if (token !== "") {
     client.login(token);
   } else {

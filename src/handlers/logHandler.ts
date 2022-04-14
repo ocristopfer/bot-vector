@@ -13,7 +13,7 @@ export default class LogHandler {
    *
    * @param {*} sLog
    */
-  log = async (sLog) => {
+  log = async (sLog: any) => {
     console.log(sLog);
     sLog = new Date().toLocaleString() + ": " + sLog;
     this.fs.readFile(`./src/logs/${this.fileName}.txt`, "utf8", (err, data) => {
@@ -30,7 +30,7 @@ export default class LogHandler {
    * @param {*} sLog
    * @returns
    */
-  salvarLogFile = async (sLog) => {
+  salvarLogFile = async (sLog: any) => {
     return new Promise<void>((resolve, reject) => {
       this.fs.writeFile(
         `./src/logs/${this.fileName}.txt`,

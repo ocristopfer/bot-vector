@@ -21,11 +21,11 @@ export default class MusicHandler {
    * @param {*} serverQueue
    * @returns
    */
-  play = async (message, serverQueue) => {
+  play = async (message: any, serverQueue: any) => {
     let valorInformado = message.content.split(" ").splice(1).join(" ");
 
     if (valorInformado === "") {
-      return message.channel.send(
+      return message.reply(
         "Informe o nome ou a url do video a ser reproduzido!"
       );
     }
@@ -44,13 +44,12 @@ export default class MusicHandler {
    * @param {*} serverQueue
    * @returns
    */
-  skip = async (message, serverQueue) => {
+  skip = async (message: any, serverQueue: any) => {
     if (!message.member.voice.channel)
-      return message.channel.send(
+      return message.reply(
         "Você precisar está em um canal de voz para reproduzir musicas!"
       );
-    if (!serverQueue)
-      return message.channel.send("Não há musica para ser pulada!");
+    if (!serverQueue) return message.reply("Não há musica para ser pulada!");
     serverQueue.connection.dispatcher.destroy();
     this.proximaMusica(message.guild, serverQueue);
   };
@@ -61,13 +60,12 @@ export default class MusicHandler {
    * @param {*} serverQueue
    * @returns
    */
-  stop = async (message, serverQueue) => {
+  stop = async (message: any, serverQueue: any) => {
     if (!message.member.voice.channel)
-      return message.channel.send(
+      return message.reply(
         "Você precisar está em um canal de voz para reproduzir musicas!"
       );
-    if (!serverQueue)
-      return message.channel.send("Não há musica para ser pausada!");
+    if (!serverQueue) return message.reply("Não há musica para ser pausada!");
     serverQueue.songs = [];
     try {
       serverQueue.connection.dispatcher.destroy();
@@ -83,7 +81,7 @@ export default class MusicHandler {
    * @param {*} serverQueue
    * @returns
    */
-  listarMusicas = async (message, serverQueue) => {
+  listarMusicas = async (message: any, serverQueue: any) => {
     if (serverQueue) {
       if (serverQueue.songs.length > 0) {
         let listaMusicas = " \n ";
@@ -92,9 +90,9 @@ export default class MusicHandler {
           listaMusicas += contador + " : " + element.title + " \n ";
           contador += 1;
         });
-        return message.channel.send(`${listaMusicas}`);
+        return message.reply(`${listaMusicas}`);
       } else {
-        return message.channel.send("Nenhuma música na fila");
+        return message.reply("Nenhuma música na fila");
       }
     }
   };
@@ -105,14 +103,14 @@ export default class MusicHandler {
    * @param {*} serverQueue
    * @param {*} url
    */
-  getVideoInfo = async (message, serverQueue, url) => {
+  getVideoInfo = async (message: any, serverQueue: any, url: any) => {
     this.ytdl.getInfo(url).then(
       (songInfo) => {
         this.prepararMusica(message, serverQueue, songInfo);
       },
       (err) => {
         this.logHandler.log(err);
-        return message.channel.send("Erro ao tentar buscar video");
+        return message.reply("Erro ao tentar buscar video");
       }
     );
   };
@@ -124,15 +122,15 @@ export default class MusicHandler {
    * @param {*} songInfo
    * @returns
    */
-  prepararMusica = async (message, serverQueue, songInfo) => {
+  prepararMusica = async (message: any, serverQueue: any, songInfo: any) => {
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel)
-      return message.channel.send(
+      return message.reply(
         "Você precisar está em um canal de voz para reproduzir musicas!"
       );
     const permissions = voiceChannel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-      return message.channel.send(
+      return message.reply(
         "I need the permissions to join and speak in your voice channel!"
       );
     }
@@ -159,18 +157,18 @@ export default class MusicHandler {
       try {
         var connection = await voiceChannel.join();
         queueContruct.connection = connection;
-        message.channel.send(`Reproduzindo: ${song.title}!`);
+        message.reply(`Reproduzindo: ${song.title}!`);
         this.logHandler.log(`Reproduzindo: ${song.title}!`);
         this.tocarMusica(message.guild, queueContruct.songs[0]);
       } catch (err) {
         this.logHandler.log(err);
         this.queue.delete(message.guild.id);
-        return message.channel.send(err);
+        return message.reply(err);
       }
     } else {
       serverQueue.songs.push(song);
       this.logHandler.log(`${song.title} foi adicionado a fila!`);
-      return message.channel.send(`${song.title} foi adicionado a fila!`);
+      return message.reply(`${song.title} foi adicionado a fila!`);
     }
   };
 
@@ -180,7 +178,7 @@ export default class MusicHandler {
    * @param {*} song
    * @returns
    */
-  tocarMusica = async (guild, song) => {
+  tocarMusica = async (guild: any, song: any) => {
     const serverQueue = this.queue.get(guild.id);
     if (!song) {
       this.desconectar(guild);
@@ -215,7 +213,7 @@ export default class MusicHandler {
    * @param {*} guild
    * @param {*} serverQueue
    */
-  proximaMusica = async (guild, serverQueue) => {
+  proximaMusica = async (guild: any, serverQueue: any) => {
     serverQueue.songs.shift();
     this.tocarMusica(guild, serverQueue.songs[0]);
   };

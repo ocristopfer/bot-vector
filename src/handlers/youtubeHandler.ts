@@ -6,7 +6,7 @@ export default class YouTubeHandler {
    * @param {*} url
    * @returns promisse
    */
-  getScript = async (url) => {
+  getScript = async (url: any) => {
     return new Promise((resolve, reject) => {
       let client = null;
 
@@ -41,7 +41,7 @@ export default class YouTubeHandler {
    * @param {*} args
    * @returns string
    */
-  buscarYouTubeNoApi = async (args) => {
+  buscarYouTubeNoApi = async (args: any) => {
     return await this.getScript(
       "https://www.youtube.com/results?search_query=" + args.replace(/\s/g, "+")
     )
