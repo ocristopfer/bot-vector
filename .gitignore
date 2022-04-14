@@ -38,5 +38,3 @@ src/config.json
 *.dccache
 src/logs/*.txt
 dist/
-*.lock
-yarn.lock
