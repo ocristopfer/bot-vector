@@ -1,5 +1,5 @@
-import http from "http";
-import https from "https";
+import * as http from "http";
+import * as https from "https";
 export default class YouTubeHandler {
   /**
    * Faz a busca na pagina.
@@ -8,10 +8,12 @@ export default class YouTubeHandler {
    */
   getScript = async (url) => {
     return new Promise((resolve, reject) => {
-      let client = http;
+      let client = null;
 
       if (url.toString().indexOf("https") === 0) {
         client = https;
+      } else {
+        client = http;
       }
 
       client
@@ -44,7 +46,7 @@ export default class YouTubeHandler {
       "https://www.youtube.com/results?search_query=" + args.replace(/\s/g, "+")
     )
       .then((resolve) => {
-        var idVideo = resolve.match(/.watch.v=[^"]*/gm)[0];
+        var idVideo = resolve.toString().match(/.watch.v=[^"]*/gm)[0];
         return `https://www.youtube.com${idVideo}`;
       })
       .catch((erro) => {

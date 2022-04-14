@@ -1,5 +1,7 @@
 import * as fs from "fs";
 export default class LogHandler {
+  fileName: string;
+  fs: typeof fs;
   constructor() {
     this.fileName = new Date()
       .toLocaleDateString()
@@ -29,7 +31,7 @@ export default class LogHandler {
    * @returns
    */
   salvarLogFile = async (sLog) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.fs.writeFile(
         `./src/logs/${this.fileName}.txt`,
         sLog,

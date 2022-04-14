@@ -1,7 +1,12 @@
 import YoutubeHandler from "./youtubeHandler.js";
-import ytdl from "ytdl-core";
+import * as ytdl from "ytdl-core";
 import LogHandler from "./logHandler.js";
 export default class MusicHandler {
+  queue: any;
+  ytdl: any;
+  youtubeHandler: YoutubeHandler;
+  logHandler: LogHandler;
+  desconectar: any;
   constructor(queue, desconectar) {
     this.queue = queue;
     this.ytdl = ytdl;
@@ -54,10 +59,9 @@ export default class MusicHandler {
    *
    * @param {*} message
    * @param {*} serverQueue
-   * @param {*} desconectar
    * @returns
    */
-  stop = async (message, serverQueue, desconectar) => {
+  stop = async (message, serverQueue) => {
     if (!message.member.voice.channel)
       return message.channel.send(
         "Você precisar está em um canal de voz para reproduzir musicas!"

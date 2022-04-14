@@ -2,9 +2,8 @@
   "name": "botcda",
   "version": "1.0.0",
   "description": "Um simples bot para discord",
-  "main": "src/index.js",
-  "bin": "src/index.js",
-  "type": "module",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.5.3",
@@ -13,13 +12,17 @@
     "ffmpeg-static": "^5.0.0",
     "nodemon": "^2.0.15",
     "opusscript": "0.0.7",
+    "source-map-loader": "^3.0.1",
+    "ts-loader": "^9.2.8",
     "youtube-v3-api": "^1.1.1",
     "ytdl-core": "^4.8.3",
     "ytdl-core-discord": "^1.2.2"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "debug": "nodemon --ignore src/logs/ src/index.js",
+    "start": "npm run build && node dist/index.js",
+    "debug": "npm run build && nodemon --ignore src/logs/ dist/index.js",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pkg": {

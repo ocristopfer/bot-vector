@@ -12,7 +12,7 @@ client.once("ready", () => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-  member.guild.channels.get("channelID").send("Bem Vindo :D");
+  //member.guild.channels.get("channelID").send("Bem Vindo :D");
 });
 
 client.on("voiceStateUpdate", async (oldMember, newMember) => {
@@ -128,9 +128,9 @@ const usuarioMudouDeCanal = (oMember, bFlEntrou) => {
   client.channels
     .fetch(oMember.channelID)
     .then((resolve) => {
-      mensagem = `${oMember.member.displayName} ${
+      let mensagem = `${oMember.member.displayName} ${
         bFlEntrou ? "Entrou" : "Saiu"
-      } do canal de voz ${resolve.name}`;
+      } do canal de voz ${resolve}`;
       oMember.guild.channels.cache
         .filter(
           (channel) => channel.name === "chat" || channel.name === "geral"
