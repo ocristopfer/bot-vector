@@ -3,6 +3,7 @@ import { Client } from "discord.js";
 import LogHandler from "./handlers/logHandler.js";
 import MusicHandler from "./handlers/musicHandler.js";
 import * as express from "express";
+import * as https from "https";
 const client = new Client();
 const queue = new Map();
 const logHandler = new LogHandler();
@@ -15,12 +16,13 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("The application is listening on port 3000!");
+  logHandler.log("The application is listening on port 3000!");
 });
 
-var http = require("http");
 setInterval(function () {
-  http.get("https://bot-cda-cris.herokuapp.com/");
+  https.get("https://bot-cda-cris.herokuapp.com/", (resp) => {
+    logHandler.log(`Acordando boot`);
+  });
 }, 300000); // every 5 minutes (300000)
 
 //Discord events
