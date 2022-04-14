@@ -2,9 +2,20 @@ import "dotenv/config";
 import { Client } from "discord.js";
 import LogHandler from "./handlers/logHandler.js";
 import MusicHandler from "./handlers/musicHandler.js";
+import * as express from "express";
 const client = new Client();
 const queue = new Map();
 const logHandler = new LogHandler();
+
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Well done!");
+});
+
+app.listen(80, () => {
+  console.log("The application is listening on port 3000!");
+});
 
 //Discord events
 client.once("ready", () => {

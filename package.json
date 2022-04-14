@@ -6,8 +6,11 @@
   "bin": "dist/index.js",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.24",
     "discord.js": "^12.5.3",
     "dotenv": "^16.0.0",
+    "express": "^4.17.3",
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^5.0.0",
     "nodemon": "^2.0.15",
