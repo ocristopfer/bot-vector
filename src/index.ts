@@ -8,7 +8,7 @@ const queue = new Map();
 const logHandler = new LogHandler();
 
 const app = express();
-const port = process.env.PREFIX || 3000;
+const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
   res.send("Well done!");
