@@ -18,6 +18,11 @@ app.listen(port, () => {
   console.log("The application is listening on port 3000!");
 });
 
+var http = require("http");
+setInterval(function () {
+  http.get("https://bot-cda-cris.herokuapp.com/");
+}, 300000); // every 5 minutes (300000)
+
 //Discord events
 client.once("ready", () => {
   logHandler.log("Iniciado");
