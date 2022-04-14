@@ -1,2 +1,2 @@
-# botcda
-Bot da casa dos amigos :D
+# Vector Discord bot
+Um bot mágico
