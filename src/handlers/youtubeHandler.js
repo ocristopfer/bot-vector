@@ -1,14 +1,13 @@
-module.exports = function () {
+import http from "http";
+import https from "https";
+export default class YouTubeHandler {
   /**
    * Faz a busca na pagina.
    * @param {*} url
    * @returns promisse
    */
-  this.getScript = async (url) => {
+  getScript = async (url) => {
     return new Promise((resolve, reject) => {
-      const http = require("http"),
-        https = require("https");
-
       let client = http;
 
       if (url.toString().indexOf("https") === 0) {
@@ -40,7 +39,7 @@ module.exports = function () {
    * @param {*} args
    * @returns string
    */
-  this.buscarYouTubeNoApi = async (args) => {
+  buscarYouTubeNoApi = async (args) => {
     return await this.getScript(
       "https://www.youtube.com/results?search_query=" + args.replace(/\s/g, "+")
     )
@@ -52,4 +51,4 @@ module.exports = function () {
         console.log(erro);
       });
   };
-};
+}

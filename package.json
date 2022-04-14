@@ -2,8 +2,9 @@
   "name": "botcda",
   "version": "1.0.0",
   "description": "Um simples bot para discord",
-  "main": "main.js",
-  "bin": "bin.js",
+  "main": "src/index.js",
+  "bin": "src/index.js",
+  "type": "module",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.5.3",
@@ -17,11 +18,12 @@
     "ytdl-core-discord": "^1.2.2"
   },
   "scripts": {
-    "start": "node src/app.js",
-    "debug": "nodemon --ignore src/logs/ src/app.js",
+    "start": "node src/index.js",
+    "debug": "nodemon --ignore src/logs/ src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pkg": {
+    "scripts": "src/**/*.js",
     "assets": [
       "./node_modules/**"
     ]

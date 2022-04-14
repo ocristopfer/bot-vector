@@ -34,3 +34,6 @@ packages/
 node_modules/
 packages-lock.json
 src/config.json
+.env
+.dccache
+logs/*
