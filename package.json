@@ -8,6 +8,7 @@
     "@discordjs/opus": "^0.3.2",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.24",
+    "copyfiles": "^2.4.1",
     "discord.js": "^12.5.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
@@ -25,11 +26,12 @@
     "ytdl-core-discord": "^1.2.2"
   },
   "scripts": {
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && npm run copyhtml && node dist/index.js",
     "debug": "npm run build && nodemon --ignore src/logs/ dist/index.js",
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copyhtml": "copyfiles -u 1 src/public/* dist/"
   },
   "pkg": {
     "scripts": "src/**/*.js",
@@ -38,5 +40,9 @@
     ]
   },
   "author": "@ocristopfer",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "prettier": "^2.6.2"
+  }
 }

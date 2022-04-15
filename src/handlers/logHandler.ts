@@ -1,29 +1,29 @@
-import * as fs from "fs";
+import * as fs from 'fs'
 export default class LogHandler {
-  fileName: string;
-  fs: typeof fs;
+  fileName: string
+  fs: typeof fs
   constructor() {
     this.fileName = new Date()
       .toLocaleDateString()
       .trim()
-      .replace(/[^\w\s]/gi, "_");
-    this.fs = fs;
+      .replace(/[^\w\s]/gi, '_')
+    this.fs = fs
   }
   /**
    *
    * @param {*} sLog
    */
   log = async (sLog: any) => {
-    console.log(sLog);
-    sLog = new Date().toLocaleString() + ": " + sLog;
-    this.fs.readFile(`./src/logs/${this.fileName}.txt`, "utf8", (err, data) => {
+    console.log(sLog)
+    sLog = new Date().toLocaleString() + ': ' + sLog
+    this.fs.readFile(`./src/logs/${this.fileName}.txt`, 'utf8', (err, data) => {
       if (err) {
-        this.salvarLogFile(sLog);
-        return;
+        this.salvarLogFile(sLog)
+        return
       }
-      this.salvarLogFile((data += `\n${sLog}`));
-    });
-  };
+      this.salvarLogFile((data += `\n${sLog}`))
+    })
+  }
 
   /**
    *
@@ -37,11 +37,11 @@ export default class LogHandler {
         sLog,
         function (err) {
           if (err) {
-            reject(err);
+            reject(err)
           }
-          resolve();
-        }
-      );
-    });
-  };
+          resolve()
+        },
+      )
+    })
+  }
 }
