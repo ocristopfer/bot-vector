@@ -1,2 +1,2 @@
-import BotIndex from './botindex'
+import BotIndex from './botIndex'
 const bot = new BotIndex()
