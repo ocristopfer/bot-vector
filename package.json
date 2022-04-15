@@ -26,9 +26,9 @@
     "ytdl-core-discord": "^1.2.2"
   },
   "scripts": {
-    "start": "npm run build && npm run copyhtml && node dist/index.js",
-    "debug": "npm run build && nodemon --ignore src/logs/ dist/index.js",
-    "build": "tsc --build",
+    "start": "yarn build && node dist/index.js",
+    "debug": "yarn build && nodemon --ignore src/logs/ dist/index.js",
+    "build": "tsc --build && yarn copyhtml",
     "clean": "tsc --build --clean",
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyhtml": "copyfiles -u 1 src/public/* dist/"
