@@ -1,8 +1,14 @@
 import * as http from 'http'
 import * as https from 'https'
-import { injectable } from 'inversify'
+import { inject, injectable } from 'inversify'
+import { LogHandler } from '../../handlers'
+import { TYPES } from '../../types'
 @injectable()
 export default class YouTubeService {
+  private logHandler: LogHandler
+  constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
+    this.logHandler = logHandler
+  }
   /**
    * Faz a busca na pagina.
    * @param {*} url
@@ -32,8 +38,9 @@ export default class YouTubeService {
             resolve(data)
           })
         })
-        .on('error', (err) => {
-          reject(err)
+        .on('error', (error) => {
+          this.logHandler.log(`Erro inesperado: ${error}`)
+          reject(error)
         })
     })
   }
@@ -52,8 +59,8 @@ export default class YouTubeService {
         var idVideo = resolve.toString().match(/.watch.v=[^"]*/gm)[0]
         return `https://www.youtube.com${idVideo}`
       })
-      .catch((erro) => {
-        console.log(erro)
+      .catch((error) => {
+        this.logHandler.log(`Erro inesperado: ${error}`)
       })
   }
 }

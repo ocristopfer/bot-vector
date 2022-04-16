@@ -1,9 +1,14 @@
-import { Client, Message } from 'discord.js'
+import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
+import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 
 @injectable()
 export default class BotComandHelp implements BotComands {
+  private logHandler: LogHandler
+  constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
+    this.logHandler = logHandler
+  }
   private comandos = [
     {
       nome: 'play',
@@ -44,10 +49,15 @@ export default class BotComandHelp implements BotComands {
   ]
 
   public execute = async (message: Message) => {
-    let help = 'Comandos: \n'
-    this.comandos.forEach((comand: any) => {
-      help += `${comand.nome}: ${comand.description} \n`
-    })
-    message.reply(help)
+    try {
+      let help = 'Comandos: \n'
+      this.comandos.forEach((comand: any) => {
+        help += `${comand.nome}: ${comand.description} \n`
+      })
+      message.reply(help)
+    } catch (error) {
+      this.logHandler.log(`Erro inesperado: ${error}`)
+      return message.reply('Erro inesperado')
+    }
   }
 }

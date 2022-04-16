@@ -26,19 +26,24 @@ export default class BotComandPlay implements BotComands {
    * @returns
    */
   public execute = async (message: any) => {
-    let valorInformado = message.content.split(' ').splice(1).join(' ')
+    try {
+      let valorInformado = message.content.split(' ').splice(1).join(' ')
 
-    if (valorInformado === '') {
-      return message.reply(
-        'Informe o nome ou a url do video a ser reproduzido!',
-      )
-    }
+      if (valorInformado === '') {
+        return message.reply(
+          'Informe o nome ou a url do video a ser reproduzido!',
+        )
+      }
 
-    if (valorInformado.substring(0, 4) !== 'http') {
-      valorInformado = await this.youTubeService.buscarYouTubeNoApi(
-        valorInformado,
-      )
+      if (valorInformado.substring(0, 4) !== 'http') {
+        valorInformado = await this.youTubeService.buscarYouTubeNoApi(
+          valorInformado,
+        )
+      }
+      return this.musicHandler.getVideoInfo(message, valorInformado)
+    } catch (error) {
+      this.logHandler.log(`Erro inesperado: ${error}`)
+      return message.reply('Erro inesperado')
     }
-    return this.musicHandler.getVideoInfo(message, valorInformado)
   }
 }

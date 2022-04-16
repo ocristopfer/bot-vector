@@ -9,12 +9,15 @@ import BotComandDesconectar from './desconectar.usecase'
 export default class BotComandStop implements BotComands {
   private logHandler: LogHandler
   private botDesconectar: BotComandDesconectar
+  private songQueue: Map<any, any>
   constructor(
+    @inject(TYPES.SongQueue) songQueue: Map<any, any>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
-    @inject(TYPES.BotComandDesconectar) botDesconectar: BotComandDesconectar,
+    @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
   ) {
     this.logHandler = logHandler
     this.botDesconectar = botDesconectar
+    this.songQueue = songQueue
   }
 
   /**
@@ -23,18 +26,24 @@ export default class BotComandStop implements BotComands {
    * @param {*} serverQueue
    * @returns
    */
-  public execute = async (message: any, serverQueue: any) => {
-    if (!message.member.voice.channel)
-      return message.reply(
-        'Você precisar está em um canal de voz para reproduzir musicas!',
-      )
-    if (!serverQueue) return message.reply('Não há musica para ser pausada!')
-    serverQueue.songs = []
+  public execute = async (message: any) => {
     try {
-      serverQueue.connection.dispatcher.destroy()
-      this.botDesconectar.execute(message)
+      const serverQueue = this.songQueue.get(message.guild.id)
+      if (!message.member.voice.channel)
+        return message.reply(
+          'Você precisar está em um canal de voz para reproduzir musicas!',
+        )
+      if (!serverQueue) return message.reply('Não há musica para ser pausada!')
+      serverQueue.songs = []
+      try {
+        serverQueue.connection.dispatcher.destroy()
+        return this.botDesconectar.execute(message)
+      } catch (error) {
+        this.logHandler.log(error)
+      }
     } catch (error) {
-      this.logHandler.log(error)
+      this.logHandler.log(`Erro inesperado: ${error}`)
+      return message.reply('Erro inesperado')
     }
   }
 }

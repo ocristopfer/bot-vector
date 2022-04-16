@@ -16,7 +16,7 @@ export default class Bot {
   }
   public init = () => {
     try {
-      this.logHandler.log(`Inciando bot`)
+      this.logHandler.log(`Iniciando Bot`)
       this.botHandler.init()
     } catch (error) {
       this.logHandler.log(`Erro ao iniciar bot: ${error}`)

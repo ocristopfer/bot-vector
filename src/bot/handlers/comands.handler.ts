@@ -1,36 +1,36 @@
-import { Client, Message } from 'discord.js'
+import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
-import { BotComandDesconectar, BotComandPing } from '../usecases'
 import { TYPES } from '../../types'
 import container from './../../inversify.config'
+import { LogHandler } from '../../handlers'
 
 @injectable()
 export default class BotComandsHandler {
   private prefix: string
-  private botComandDesconectar: BotComandDesconectar
-  private botComandPing: BotComandPing
+  private logHandler: LogHandler
   constructor(
     @inject(TYPES.Prefix) prefix: string,
-    @inject(TYPES.BotComandDesconectar)
-    botComandDesconectar: BotComandDesconectar,
-    @inject(TYPES.BotComandPing)
-    botComandPing: BotComandPing,
+    @inject(TYPES.LogHandler)
+    logHandler: LogHandler,
   ) {
     this.prefix = prefix
-    this.botComandDesconectar = botComandDesconectar
-    this.botComandPing = botComandPing
+    this.logHandler = logHandler
   }
 
   public handle = async (message: Message) => {
     let messageContent = message.content.toLocaleLowerCase()
     if (message.author.bot) return
     if (!messageContent.startsWith(this.prefix)) return
-    messageContent = this.upperPrimeiraLetra(messageContent.slice(1))
-    let useCase = container.get<BotComands>(TYPES[`BotComand${messageContent}`])
-    console.log(useCase)
-    useCase.execute(message)
-  }
-  private upperPrimeiraLetra = (text: string) => {
-    return text.charAt(0).toUpperCase() + text.slice(1)
+    this.logHandler.log(`Comando executado: ${messageContent}`)
+    try {
+      messageContent = messageContent.split(' ')[0].slice(1)
+      let useCase = container.get<BotComands>(
+        TYPES[`BotComand${messageContent}`],
+      )
+      useCase.execute(message)
+    } catch (error) {
+      this.logHandler.log(`Erro ao executar comando, erro: ${error}`)
+      message.reply('Comando não encontrado')
+    }
   }
 }

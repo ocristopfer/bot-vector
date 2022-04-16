@@ -13,6 +13,7 @@ export default class WebService {
   private logHandler: LogHandler
   constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
     this.logHandler = logHandler
+    this.logHandler.log('Iniciando WebService')
   }
   public init = () => {
     const app = express()
@@ -23,7 +24,7 @@ export default class WebService {
     })
 
     app.listen(port, () => {
-      this.logHandler.log('The application is listening on port 3000!')
+      this.logHandler.log('Web Service Iniciado!')
     })
 
     setInterval(() => {

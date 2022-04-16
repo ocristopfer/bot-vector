@@ -1,4 +1,3 @@
-import YoutubeHandler from '../services/youtube.service.js'
 import * as ytdl from 'ytdl-core'
 import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
@@ -10,25 +9,22 @@ import { BotComandDesconectar } from '../usecases/index'
 export default class MusicHandler {
   private queue: any
   private ytdl: any
-  private youtubeHandler: YoutubeHandler
   private logHandler: LogHandler
-  private desconectar: (message: Message) => void
+  private botDesconectar: BotComandDesconectar
   constructor(
     @inject(TYPES.SongQueue) SongQueue: Map<any, any>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
-    @inject(TYPES.BotComandDesconectar) botDesconectar: BotComandDesconectar,
+    @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
   ) {
     this.queue = SongQueue
     this.ytdl = ytdl
-    this.youtubeHandler = new YoutubeHandler()
     this.logHandler = logHandler
-    this.desconectar = botDesconectar.execute
+    this.botDesconectar = botDesconectar
   }
 
   /**
    *
    * @param {*} message
-   * @param {*} serverQueue
    * @param {*} url
    */
   getVideoInfo = async (message: Message, url: any) => {
@@ -110,7 +106,7 @@ export default class MusicHandler {
   tocarMusica = async (guild: any, song: any) => {
     const serverQueue = this.queue.get(guild.id)
     if (!song) {
-      this.desconectar(guild)
+      this.botDesconectar.execute(guild)
       return
     } else {
       const dispatcher = serverQueue.connection

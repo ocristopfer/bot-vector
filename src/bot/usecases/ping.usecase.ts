@@ -1,19 +1,30 @@
 import { Client, Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
+import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 
 @injectable()
 export default class BotComandPing implements BotComands {
   private botClient: Client
-  constructor(@inject(TYPES.Client) botClient: Client) {
+  private logHandler: LogHandler
+  constructor(
+    @inject(TYPES.Client) botClient: Client,
+    @inject(TYPES.LogHandler) logHandler: LogHandler,
+  ) {
     this.botClient = botClient
+    this.logHandler = logHandler
   }
 
   public execute = async (message: Message) => {
-    message.reply(
-      `🏓Latency is ${
-        Date.now() - message.createdTimestamp
-      }ms. API Latency is ${Math.round(this.botClient.ws.ping)}ms`,
-    )
+    try {
+      message.reply(
+        `🏓Latency is ${
+          Date.now() - message.createdTimestamp
+        }ms. API Latency is ${Math.round(this.botClient.ws.ping)}ms`,
+      )
+    } catch (error) {
+      this.logHandler.log(`Erro inesperado: ${error}`)
+      return message.reply('Erro inesperado')
+    }
   }
 }

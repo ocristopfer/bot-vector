@@ -10,26 +10,31 @@ export default class BotComandClearChat implements BotComands {
   }
 
   public execute = async (message: any) => {
-    if (!message.member.hasPermission('ADMINISTRATOR')) {
-      return
-    }
-
     try {
-      message.delete()
-      const fetched = await message.channel.fetchMessages({
-        limit: 99,
-      })
-      message.channel
-        .bulkDelete(fetched)
-        .then(() => {
-          message.reply('Efetuada a limpeza do chat!')
+      if (!message.member.hasPermission('ADMINISTRATOR')) {
+        return message.reply('Não tem permissão para executar esse comando!')
+      }
+
+      try {
+        message.delete()
+        const fetched = await message.channel.fetchMessages({
+          limit: 99,
         })
-        .catch((erro: any) => {
-          this.logHandler.log(erro)
-        })
+        message.channel
+          .bulkDelete(fetched)
+          .then(() => {
+            message.reply('Efetuada a limpeza do chat!')
+          })
+          .catch((erro: any) => {
+            this.logHandler.log(erro)
+          })
+      } catch (error) {
+        this.logHandler.log(error)
+        message.reply('Erro ao tentar limpar chat!')
+      }
     } catch (error) {
-      this.logHandler.log(error)
-      message.reply('Erro ao tentar limpar chat!')
+      this.logHandler.log(`Erro inesperado: ${error}`)
+      return message.reply('Erro inesperado')
     }
   }
 }

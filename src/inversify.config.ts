@@ -21,6 +21,7 @@ import {
   BotComandStop,
 } from './bot/usecases'
 import BotComandsHandler from './bot/handlers/comands.handler'
+import BotUserChangeChannelHandler from './bot/handlers/user.change.channel.handler'
 
 let container = new Container()
 
@@ -30,8 +31,12 @@ container
   .bind<BotComandsHandler>(TYPES.BotComandsHandler)
   .to(BotComandsHandler)
   .inSingletonScope()
+container
+  .bind<BotUserChangeChannelHandler>(TYPES.BotUserChangeChannelHandler)
+  .to(BotUserChangeChannelHandler)
+  .inSingletonScope()
+
 container.bind<LogHandler>(TYPES.LogHandler).to(LogHandler).inSingletonScope()
-container.bind<WebService>(TYPES.WebService).to(WebService).inSingletonScope()
 container
   .bind<MusicHandler>(TYPES.MusicHandler)
   .to(MusicHandler)
@@ -46,47 +51,47 @@ container
 
 //Bot Comands
 container
-  .bind<BotComandPlay>(TYPES.BotComandPlay)
+  .bind<BotComandPlay>(TYPES.BotComandplay)
   .to(BotComandPlay)
   .inSingletonScope()
 
 container
-  .bind<BotComandSkip>(TYPES.BotComandSkip)
+  .bind<BotComandSkip>(TYPES.BotComandskip)
   .to(BotComandSkip)
   .inSingletonScope()
 
 container
-  .bind<BotComandStop>(TYPES.BotComandStop)
+  .bind<BotComandStop>(TYPES.BotComandstop)
   .to(BotComandStop)
   .inSingletonScope()
 
 container
-  .bind<BotComandListarMusicas>(TYPES.BotComandListar)
+  .bind<BotComandListarMusicas>(TYPES.BotComandlistar)
   .to(BotComandListarMusicas)
   .inSingletonScope()
 
 container
-  .bind<BotComandDesconectar>(TYPES.BotComandDesconectar)
+  .bind<BotComandDesconectar>(TYPES.BotComanddesconectar)
   .to(BotComandDesconectar)
   .inSingletonScope()
 
 container
-  .bind<BotComandClearChat>(TYPES.BotComandClearChat)
+  .bind<BotComandClearChat>(TYPES.BotComandclearchat)
   .to(BotComandClearChat)
   .inSingletonScope()
 
 container
-  .bind<BotComandPing>(TYPES.BotComandPing)
+  .bind<BotComandPing>(TYPES.BotComandping)
   .to(BotComandPing)
   .inSingletonScope()
 
 container
-  .bind<BotComandHelp>(TYPES.BotComandHelp)
+  .bind<BotComandHelp>(TYPES.BotComandhelp)
   .to(BotComandHelp)
   .inSingletonScope()
 
 container
-  .bind<BotComandExit>(TYPES.BotComandExit)
+  .bind<BotComandExit>(TYPES.BotComandexit)
   .to(BotComandExit)
   .inSingletonScope()
 //const
