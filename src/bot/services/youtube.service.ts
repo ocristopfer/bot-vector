@@ -2,7 +2,7 @@ import * as http from 'http'
 import * as https from 'https'
 import { injectable } from 'inversify'
 @injectable()
-export default class YouTubeHandler {
+export default class YouTubeService {
   /**
    * Faz a busca na pagina.
    * @param {*} url

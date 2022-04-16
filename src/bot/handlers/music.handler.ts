@@ -1,12 +1,11 @@
-import YoutubeHandler from './youtubeHandler.js'
+import YoutubeHandler from '../services/youtube.service.js'
 import * as ytdl from 'ytdl-core'
-import LogHandler from './logHandler.js'
-import { inject, injectable } from 'inversify'
-import { TYPES } from '../types.js'
-import BotHandler from './botHandler.js'
-import container from '../inversify.config.js'
-import BotDesconect from '../services/botDesconect.js'
 import { Message } from 'discord.js'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../../types.js'
+import LogHandler from '../../handlers/log.handler.js'
+import { BotComandDesconectar } from '../usecases/index'
+
 @injectable()
 export default class MusicHandler {
   private queue: any
@@ -17,95 +16,13 @@ export default class MusicHandler {
   constructor(
     @inject(TYPES.SongQueue) SongQueue: Map<any, any>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
-    @inject(TYPES.BotDesconect) botDesconect: BotDesconect,
+    @inject(TYPES.BotComandDesconectar) botDesconectar: BotComandDesconectar,
   ) {
     this.queue = SongQueue
     this.ytdl = ytdl
     this.youtubeHandler = new YoutubeHandler()
     this.logHandler = logHandler
-    this.desconectar = botDesconect.desconectar
-  }
-
-  /**
-   *
-   * @param {*} message
-   * @param {*} serverQueue
-   * @returns
-   */
-  play = async (message: any, serverQueue: any) => {
-    let valorInformado = message.content.split(' ').splice(1).join(' ')
-
-    if (valorInformado === '') {
-      return message.reply(
-        'Informe o nome ou a url do video a ser reproduzido!',
-      )
-    }
-
-    if (valorInformado.substring(0, 4) !== 'http') {
-      valorInformado = await this.youtubeHandler.buscarYouTubeNoApi(
-        valorInformado,
-      )
-    }
-    return this.getVideoInfo(message, serverQueue, valorInformado)
-  }
-
-  /**
-   *
-   * @param {*} message
-   * @param {*} serverQueue
-   * @returns
-   */
-  skip = async (message: any, serverQueue: any) => {
-    if (!message.member.voice.channel)
-      return message.reply(
-        'Você precisar está em um canal de voz para reproduzir musicas!',
-      )
-    if (!serverQueue) return message.reply('Não há musica para ser pulada!')
-    serverQueue.connection.dispatcher.destroy()
-    this.proximaMusica(message.guild, serverQueue)
-  }
-
-  /**
-   *
-   * @param {*} message
-   * @param {*} serverQueue
-   * @returns
-   */
-  stop = async (message: any, serverQueue: any) => {
-    if (!message.member.voice.channel)
-      return message.reply(
-        'Você precisar está em um canal de voz para reproduzir musicas!',
-      )
-    if (!serverQueue) return message.reply('Não há musica para ser pausada!')
-    serverQueue.songs = []
-    try {
-      serverQueue.connection.dispatcher.destroy()
-      this.desconectar(message)
-    } catch (error) {
-      this.logHandler.log(error)
-    }
-  }
-
-  /**
-   *
-   * @param {*} message
-   * @param {*} serverQueue
-   * @returns
-   */
-  listarMusicas = async (message: any, serverQueue: any) => {
-    if (serverQueue) {
-      if (serverQueue.songs.length > 0) {
-        let listaMusicas = ' \n '
-        let contador = 1
-        serverQueue.songs.forEach((element) => {
-          listaMusicas += contador + ' : ' + element.title + ' \n '
-          contador += 1
-        })
-        return message.reply(`${listaMusicas}`)
-      } else {
-        return message.reply('Nenhuma música na fila')
-      }
-    }
+    this.desconectar = botDesconectar.execute
   }
 
   /**
@@ -114,7 +31,8 @@ export default class MusicHandler {
    * @param {*} serverQueue
    * @param {*} url
    */
-  getVideoInfo = async (message: any, serverQueue: any, url: any) => {
+  getVideoInfo = async (message: Message, url: any) => {
+    const serverQueue = this.queue.get(message.guild.id)
     this.ytdl.getInfo(url).then(
       (songInfo) => {
         this.prepararMusica(message, serverQueue, songInfo)

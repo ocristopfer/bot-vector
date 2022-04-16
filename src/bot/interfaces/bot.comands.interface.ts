@@ -1,0 +1,3 @@
+interface BotComands {
+  execute: any
+}

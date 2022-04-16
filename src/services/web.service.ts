@@ -3,13 +3,13 @@ import * as https from 'https'
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
 import { TYPES } from '../types.js'
-import LogHandler from './logHandler.js'
+import LogHandler from '../handlers/log.handler.js'
 
 /**
  * Criar servidor web para funcionamento do heroku
  */
 @injectable()
-export default class WebHandler {
+export default class WebService {
   private logHandler: LogHandler
   constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
     this.logHandler = logHandler
