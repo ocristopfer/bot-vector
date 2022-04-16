@@ -5,6 +5,7 @@ import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 @injectable()
 export default class YouTubeService {
+  private youTubeUrl = 'https://www.youtube.com'
   private logHandler: LogHandler
   constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
     this.logHandler = logHandler
@@ -12,7 +13,7 @@ export default class YouTubeService {
   /**
    * Faz a busca na pagina.
    * @param {*} url
-   * @returns promisse
+   * @returns string
    */
   getScript = async (url: any) => {
     return new Promise((resolve, reject) => {
@@ -52,15 +53,15 @@ export default class YouTubeService {
    */
   buscarYouTubeNoApi = async (args: any) => {
     return await this.getScript(
-      'https://www.youtube.com/results?search_query=' +
-        args.replace(/\s/g, '+'),
+      `${this.youTubeUrl}/results?search_query=${args.replace(/\s/g, '+')}`,
     )
       .then((resolve) => {
         var idVideo = resolve.toString().match(/.watch.v=[^"]*/gm)[0]
-        return `https://www.youtube.com${idVideo}`
+        return `${this.youTubeUrl}${idVideo}`
       })
       .catch((error) => {
         this.logHandler.log(`Erro inesperado: ${error}`)
+        return ''
       })
   }
 }

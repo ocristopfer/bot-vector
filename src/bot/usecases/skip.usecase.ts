@@ -33,7 +33,7 @@ export default class BotComandStop implements BotComands {
         )
       if (!serverQueue) return message.reply('Não há musica para ser pulada!')
       serverQueue.connection.dispatcher.destroy()
-      this.musicHandler.proximaMusica(message.guild, serverQueue)
+      this.musicHandler.proximaMusica(message)
     } catch (error) {
       this.logHandler.log(`Erro inesperado: ${error}`)
       return message.reply('Erro inesperado')

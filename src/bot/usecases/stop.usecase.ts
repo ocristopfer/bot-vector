@@ -23,10 +23,9 @@ export default class BotComandStop implements BotComands {
   /**
    *
    * @param {*} message
-   * @param {*} serverQueue
    * @returns
    */
-  public execute = async (message: any) => {
+  public execute = async (message: Message) => {
     try {
       const serverQueue = this.songQueue.get(message.guild.id)
       if (!message.member.voice.channel)

@@ -28,8 +28,7 @@ export default class BotComandListarMusicas implements BotComands {
         return message.reply(defaultMessage)
 
       let listaMusicas = '\n '
-      serverQueue.songs.forEach((element, index) => {
-        console.log(element, index)
+      serverQueue.songs.forEach((element: Song, index: number) => {
         listaMusicas += `${index + 1} : ${element.title}\n`
       })
       return message.reply(`${listaMusicas}`)

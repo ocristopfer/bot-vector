@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js'
+import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
@@ -17,13 +17,12 @@ export default class BotComandDesconectar implements BotComands {
 
   public execute = (message: Message) => {
     try {
-      const guild = message.guild != undefined ? message.guild : message
-      const serverQueue = this.SongQueue.get(guild.id)
-      if (serverQueue != undefined) {
-        serverQueue.voiceChannel.leave()
+      const guild = message.guild
+      const songQueue = this.SongQueue.get(guild.id)
+      if (songQueue != undefined) {
+        songQueue.voiceChannel.leave()
         this.SongQueue.delete(guild.id)
       }
-      return
     } catch (error) {
       this.logHandler.log(`Erro inesperado: ${error}`)
       return message.reply('Erro inesperado')

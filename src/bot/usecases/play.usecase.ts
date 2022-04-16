@@ -25,7 +25,7 @@ export default class BotComandPlay implements BotComands {
    * @param {*} message
    * @returns
    */
-  public execute = async (message: any) => {
+  public execute = async (message: Message) => {
     try {
       let valorInformado = message.content.split(' ').splice(1).join(' ')
 
@@ -34,13 +34,24 @@ export default class BotComandPlay implements BotComands {
           'Informe o nome ou a url do video a ser reproduzido!',
         )
       }
+      const voiceChannel = message.member.voice.channel
+      if (!voiceChannel)
+        return message.reply(
+          'Você precisar está em um canal de voz para reproduzir musicas!',
+        )
+      const permissions = voiceChannel.permissionsFor(message.client.user)
+      if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+        return message.reply(
+          'I need the permissions to join and speak in your voice channel!',
+        )
+      }
 
       if (valorInformado.substring(0, 4) !== 'http') {
         valorInformado = await this.youTubeService.buscarYouTubeNoApi(
           valorInformado,
         )
       }
-      return this.musicHandler.getVideoInfo(message, valorInformado)
+      return this.musicHandler.addMusicaNaFila(message, valorInformado)
     } catch (error) {
       this.logHandler.log(`Erro inesperado: ${error}`)
       return message.reply('Erro inesperado')

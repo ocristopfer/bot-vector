@@ -7,7 +7,7 @@ import { BotComandDesconectar } from '../usecases/index'
 
 @injectable()
 export default class MusicHandler {
-  private queue: any
+  private songQueue: any
   private ytdl: any
   private logHandler: LogHandler
   private botDesconectar: BotComandDesconectar
@@ -16,22 +16,25 @@ export default class MusicHandler {
     @inject(TYPES.LogHandler) logHandler: LogHandler,
     @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
   ) {
-    this.queue = SongQueue
+    this.songQueue = SongQueue
     this.ytdl = ytdl
     this.logHandler = logHandler
     this.botDesconectar = botDesconectar
   }
 
+  public addMusicaNaFila = (message: Message, url: string) => {
+    this.getVideoInfo(message, url)
+  }
   /**
    *
    * @param {*} message
    * @param {*} url
    */
-  getVideoInfo = async (message: Message, url: any) => {
-    const serverQueue = this.queue.get(message.guild.id)
+  private getVideoInfo = async (message: Message, url: string) => {
+    const songQueue = this.songQueue.get(message.guild.id)
     this.ytdl.getInfo(url).then(
       (songInfo) => {
-        this.prepararMusica(message, serverQueue, songInfo)
+        this.prepararMusica(message, songQueue, songInfo)
       },
       (err) => {
         this.logHandler.log(err)
@@ -43,55 +46,46 @@ export default class MusicHandler {
   /**
    *
    * @param {*} message
-   * @param {*} serverQueue
+   * @param {*} songQueue
    * @param {*} songInfo
    * @returns
    */
-  prepararMusica = async (message: any, serverQueue: any, songInfo: any) => {
+  private prepararMusica = async (
+    message: Message,
+    songQueue: SongQueue,
+    songInfo: any,
+  ) => {
     const voiceChannel = message.member.voice.channel
-    if (!voiceChannel)
-      return message.reply(
-        'Você precisar está em um canal de voz para reproduzir musicas!',
-      )
-    const permissions = voiceChannel.permissionsFor(message.client.user)
-    if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-      return message.reply(
-        'I need the permissions to join and speak in your voice channel!',
-      )
-    }
-
-    const song = {
+    const song: Song = {
       title: songInfo.videoDetails.title,
       url: songInfo.videoDetails.video_url,
     }
 
-    if (!serverQueue) {
-      const queueContruct = {
+    if (!songQueue) {
+      const songQueue: SongQueue = {
         textChannel: message.channel,
         voiceChannel: voiceChannel,
         connection: null,
-        songs: [],
+        songs: [song],
         volume: 5,
         playing: true,
       }
 
-      this.queue.set(message.guild.id, queueContruct)
-
-      queueContruct.songs.push(song)
+      this.songQueue.set(message.guild.id, songQueue)
 
       try {
         var connection = await voiceChannel.join()
-        queueContruct.connection = connection
+        songQueue.connection = connection
         message.reply(`Reproduzindo: ${song.title}!`)
         this.logHandler.log(`Reproduzindo: ${song.title}!`)
-        this.tocarMusica(message.guild, queueContruct.songs[0])
+        this.tocarMusica(message, songQueue.songs[0])
       } catch (err) {
         this.logHandler.log(err)
-        this.queue.delete(message.guild.id)
+        this.songQueue.delete(message.guild.id)
         return message.reply(err)
       }
     } else {
-      serverQueue.songs.push(song)
+      songQueue.songs.push(song)
       this.logHandler.log(`${song.title} foi adicionado a fila!`)
       return message.reply(`${song.title} foi adicionado a fila!`)
     }
@@ -103,43 +97,51 @@ export default class MusicHandler {
    * @param {*} song
    * @returns
    */
-  tocarMusica = async (guild: any, song: any) => {
-    const serverQueue = this.queue.get(guild.id)
+  private tocarMusica = async (message: Message, song: Song) => {
+    const guild = message.guild
+    const serverQueue = this.songQueue.get(guild.id)
     if (!song) {
-      this.botDesconectar.execute(guild)
-      return
+      return this.botDesconectar.execute(message)
     } else {
       const dispatcher = serverQueue.connection
         .play(
-          await ytdl(song.url, {
+          await this.ytdl(song.url, {
             filter: 'audioonly',
             quality: 'highestaudio',
             highWaterMark: 1 << 25,
           }),
         )
         .on('finish', () => {
-          this.logHandler.log(`Musica ${song.title} encerrada!`)
-          this.proximaMusica(guild, serverQueue)
+          this.musicaEncerrada(message, song)
         })
         .on('end', () => {
-          this.logHandler.log(`Musica ${song.title} encerrada!`)
-          this.proximaMusica(guild, serverQueue)
+          this.musicaEncerrada(message, song)
         })
-        .on('error', (error) => {
+        .on('error', (error: any) => {
           this.logHandler.log(error)
-          this.proximaMusica(guild, serverQueue)
+          this.proximaMusica(message)
         })
       dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
     }
   }
 
+  private musicaEncerrada = (message: Message, song: Song) => {
+    this.logHandler.log(`Musica ${song.title} encerrada!`)
+    this.proximaMusica(message)
+  }
   /**
    *
    * @param {*} guild
-   * @param {*} serverQueue
    */
-  proximaMusica = async (guild: any, serverQueue: any) => {
-    serverQueue.songs.shift()
-    this.tocarMusica(guild, serverQueue.songs[0])
+  proximaMusica = async (message: Message) => {
+    const guild = message.guild
+    const songQueue = this.songQueue.get(guild.id)
+    let songs = songQueue.songs
+    if (songs?.length > 0) {
+      this.songQueue.songs.shift()
+      this.tocarMusica(message, this.songQueue.songs[0])
+    } else {
+      this.botDesconectar.execute(message)
+    }
   }
 }
