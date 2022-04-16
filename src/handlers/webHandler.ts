@@ -1,15 +1,18 @@
 import * as express from 'express'
 import * as https from 'https'
+import { inject, injectable } from 'inversify'
 import * as path from 'path'
+import { TYPES } from '../types.js'
 import LogHandler from './logHandler.js'
 
 /**
  * Criar servidor web para funcionamento do heroku
  */
+@injectable()
 export default class WebHandler {
   private logHandler: LogHandler
-  constructor() {
-    this.logHandler = new LogHandler()
+  constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
+    this.logHandler = logHandler
   }
   public init = () => {
     const app = express()

@@ -1,5 +1,7 @@
 import * as http from 'http'
 import * as https from 'https'
+import { injectable } from 'inversify'
+@injectable()
 export default class YouTubeHandler {
   /**
    * Faz a busca na pagina.

@@ -1,18 +1,29 @@
 import YoutubeHandler from './youtubeHandler.js'
 import * as ytdl from 'ytdl-core'
 import LogHandler from './logHandler.js'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../types.js'
+import BotHandler from './botHandler.js'
+import container from '../inversify.config.js'
+import BotDesconect from '../services/botDesconect.js'
+import { Message } from 'discord.js'
+@injectable()
 export default class MusicHandler {
-  queue: any
-  ytdl: any
-  youtubeHandler: YoutubeHandler
-  logHandler: LogHandler
-  desconectar: any
-  constructor(queue, desconectar) {
-    this.queue = queue
+  private queue: any
+  private ytdl: any
+  private youtubeHandler: YoutubeHandler
+  private logHandler: LogHandler
+  private desconectar: (message: Message) => void
+  constructor(
+    @inject(TYPES.SongQueue) SongQueue: Map<any, any>,
+    @inject(TYPES.LogHandler) logHandler: LogHandler,
+    @inject(TYPES.BotDesconect) botDesconect: BotDesconect,
+  ) {
+    this.queue = SongQueue
     this.ytdl = ytdl
     this.youtubeHandler = new YoutubeHandler()
-    this.logHandler = new LogHandler()
-    this.desconectar = desconectar
+    this.logHandler = logHandler
+    this.desconectar = botDesconect.desconectar
   }
 
   /**

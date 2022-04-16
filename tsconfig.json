@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "noImplicitAny": false,
     "noEmitOnError": true,
     "removeComments": false,
     "allowJs": true,
     "sourceMap": true,
     "target": "es5",
-    "outDir": "dist"
+    "outDir": "dist",
+    "module": "commonjs",
   },
 "include": ["./src/**/*"]
 }

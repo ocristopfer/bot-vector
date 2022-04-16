@@ -2,16 +2,29 @@ import 'dotenv/config'
 import { Client, Message } from 'discord.js'
 import LogHandler from './logHandler'
 import MusicHandler from './musicHandler.js'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../types'
+import BotDesconect from '../services/botDesconect'
+@injectable()
 export default class BotHandler {
   private botClient: Client
   private logHandler: LogHandler
+  private musicHandler: MusicHandler
   private queue: Map<any, any>
   private comandos: any
-  constructor() {
-    this.botClient = new Client()
+  private botDesconect: BotDesconect
+  constructor(
+    @inject(TYPES.Client) botClient: Client,
+    @inject(TYPES.SongQueue) SongQueue: Map<any, any>,
+    @inject(TYPES.MusicHandler) musicHandler: MusicHandler,
+    @inject(TYPES.BotDesconect) botDesconect: BotDesconect,
+  ) {
+    this.botClient = botClient
     this.logHandler = new LogHandler()
-    this.queue = new Map()
+    this.musicHandler = musicHandler
+    this.queue = SongQueue
     this.comandos = []
+    this.botDesconect = botDesconect
   }
   public init = () => {
     this.eventsBot()
@@ -67,41 +80,23 @@ export default class BotHandler {
 
   //Comandos
   private execute = async (message: Message, serverQueue: any) => {
-    return new MusicHandler(this.queue, this.desconectar).play(
-      message,
-      serverQueue,
-    )
+    return this.musicHandler.play(message, serverQueue)
   }
 
   private skip = async (message: Message, serverQueue: any) => {
-    return new MusicHandler(this.queue, this.desconectar).skip(
-      message,
-      serverQueue,
-    )
+    return this.musicHandler.skip(message, serverQueue)
   }
 
   private stop = async (message: Message, serverQueue: any) => {
-    return new MusicHandler(this.queue, this.desconectar).stop(
-      message,
-      serverQueue,
-    )
+    return this.musicHandler.stop(message, serverQueue)
   }
 
   private listar = async (message: Message, serverQueue: any) => {
-    return new MusicHandler(this.queue, this.desconectar).listarMusicas(
-      message,
-      serverQueue,
-    )
+    return this.musicHandler.listarMusicas(message, serverQueue)
   }
 
-  private desconectar = async (message: Message, serverQueue: any) => {
-    const guild = message.guild != undefined ? message.guild : message
-    serverQueue = this.queue.get(guild.id)
-    if (serverQueue != undefined) {
-      serverQueue.voiceChannel.leave()
-      this.queue.delete(guild.id)
-    }
-    return
+  public desconectar = async (message: Message, serverQueue: any) => {
+    return this.botDesconect.desconectar(message)
   }
 
   private clearchat = async (message: any) => {
