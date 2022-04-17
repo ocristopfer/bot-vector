@@ -135,11 +135,10 @@ export default class MusicHandler {
    */
   proximaMusica = async (message: Message) => {
     const guild = message.guild
-    const songQueue = this.songQueue.get(guild.id)
-    let songs = songQueue.songs
-    if (songs?.length > 0) {
-      this.songQueue.songs.shift()
-      this.tocarMusica(message, this.songQueue.songs[0])
+    const songQueue: SongQueue = this.songQueue.get(guild.id)
+    if (songQueue.songs.length > 0) {
+      songQueue.songs.shift()
+      this.tocarMusica(message, songQueue.songs[0])
     } else {
       this.botDesconectar.execute(message)
     }
