@@ -22,7 +22,7 @@ export default class MusicHandler {
   }
 
   public addMusicaNaFila = (message: Message, url: string) => {
-    this.getVideoInfo(message, url)
+    return this.getVideoInfo(message, url)
   }
   /**
    *
@@ -30,10 +30,10 @@ export default class MusicHandler {
    * @param {*} url
    */
   private getVideoInfo = async (message: Message, url: string) => {
-    const songQueue = this.songQueue.get(message.guild.id)
-    ytdl.getInfo(url).then(
+    return ytdl.getInfo(url).then(
       (songInfo) => {
-        this.prepararMusica(message, songQueue, songInfo)
+        const songQueue = this.songQueue.get(message.guild.id)
+        return this.prepararMusica(message, songQueue, songInfo)
       },
       (err) => {
         this.logHandler.log(err)

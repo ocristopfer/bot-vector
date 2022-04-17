@@ -7,45 +7,51 @@ import { BotComands } from '../interfaces'
 @injectable()
 export default class BotComandHelp implements BotComands {
   private logHandler: LogHandler
-  constructor(@inject(TYPES.LogHandler) logHandler: LogHandler) {
+  private prefix: string
+  constructor(
+    @inject(TYPES.LogHandler) logHandler: LogHandler,
+    @inject(TYPES.Prefix) prefix: string,
+  ) {
     this.logHandler = logHandler
+    this.prefix = prefix
   }
   private comandos = [
     {
       nome: 'play',
-      description: 'Reproduz audio do video do youtube informado.',
+      description:
+        'Reproduz áudio do vídeo do YouTube informado (adicione lista separada por virgula). ',
     },
     {
       nome: 'skip',
-      description: 'Pula para o proximo audio',
+      description: 'Pula para o próximo áudio ',
     },
     {
       nome: 'stop',
-      description: 'Para a reproducão de todos os audios',
+      description: 'Para a reprodução de todos os áudios',
     },
     {
       nome: 'listar',
-      description: 'Lista as musicas na fila',
+      description: 'Lista as músicas na fila',
     },
     {
       nome: 'desconectar',
-      description: 'Desconecta o bot da sala',
+      description: 'Desconecta o Bot da sala',
     },
     {
       nome: 'clearchat',
-      description: 'Limpa o chat (somente para administradores)',
+      description: 'Limpa o chat (somente para administradores) (desabilitado)',
     },
     {
       nome: 'ping',
-      description: 'Retorna o tempo de resposta do bot',
+      description: 'Retorna o tempo de resposta do Bot ',
     },
     {
       nome: 'help',
-      description: 'Lista todos os comando disponiveis',
+      description: 'Lista todos os comandos disponíveis ',
     },
     {
       nome: 'exit',
-      description: 'Encerra o bot (comente ocristopfer)',
+      description: 'Encerra o Bot (somente @ocristopfer)',
     },
   ]
 
@@ -53,7 +59,7 @@ export default class BotComandHelp implements BotComands {
     try {
       let help = 'Comandos: \n'
       this.comandos.forEach((comand: any) => {
-        help += `${comand.nome}: ${comand.description} \n`
+        help += `${this.prefix}${comand.nome}: ${comand.description} \n`
       })
       message.reply(help)
     } catch (error) {
