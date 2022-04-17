@@ -28,7 +28,8 @@ export default class WebService {
     })
 
     setInterval(() => {
-      https.get('https://bot-cda-cris.herokuapp.com/', (resp) => {
+      let urlBot = process.env.BOTURL || 'localhost:3000'
+      https.get(urlBot, (resp) => {
         this.logHandler.log('Acorda bot')
       })
     }, 300000) // every 5 minutes (300000)
