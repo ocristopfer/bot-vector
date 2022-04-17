@@ -28,7 +28,7 @@ export default class WebService {
     })
 
     setInterval(() => {
-      let urlBot = process.env.BOTURL || 'localhost:3000'
+      const urlBot = process.env.BOTURL || 'localhost:3000'
       https.get(urlBot, (resp) => {
         this.logHandler.log('Acorda bot')
       })

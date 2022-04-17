@@ -21,6 +21,7 @@ import {
 } from './bot/usecases'
 import BotComandsHandler from './bot/handlers/comands.handler'
 import BotUserChangeChannelHandler from './bot/handlers/user.change.channel.handler'
+import { SongQueue } from './bot/interfaces'
 
 const container = new Container()
 
@@ -95,7 +96,9 @@ container
   .inSingletonScope()
 // const
 container.bind<Client>(TYPES.Client).toConstantValue(new Client())
-container.bind<Map<any, any>>(TYPES.SongQueue).toConstantValue(new Map())
+container
+  .bind<Map<string, SongQueue>>(TYPES.SongQueue)
+  .toConstantValue(new Map())
 container.bind<string>(TYPES.Prefix).toConstantValue(process.env.PREFIX || '!')
 
 export default container

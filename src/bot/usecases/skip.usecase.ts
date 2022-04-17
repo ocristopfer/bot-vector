@@ -3,15 +3,15 @@ import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 import MusicHandler from '../handlers/music.handler'
-import { BotComands } from '../interfaces'
+import { BotComands, SongQueue } from '../interfaces'
 
 @injectable()
 export default class BotComandStop implements BotComands {
   private logHandler: LogHandler
   private musicHandler: MusicHandler
-  private songQueue: Map<any, any>
+  private songQueue: Map<string, SongQueue>
   constructor(
-    @inject(TYPES.SongQueue) songQueue: Map<any, any>,
+    @inject(TYPES.SongQueue) songQueue: Map<string, SongQueue>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
     @inject(TYPES.MusicHandler) musicHandler: MusicHandler,
   ) {

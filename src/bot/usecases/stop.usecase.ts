@@ -2,16 +2,16 @@ import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
-import { BotComands } from '../interfaces'
+import { BotComands, SongQueue } from '../interfaces'
 import BotComandDesconectar from './desconectar.usecase'
 
 @injectable()
 export default class BotComandStop implements BotComands {
   private logHandler: LogHandler
   private botDesconectar: BotComandDesconectar
-  private songQueue: Map<any, any>
+  private songQueue: Map<string, SongQueue>
   constructor(
-    @inject(TYPES.SongQueue) songQueue: Map<any, any>,
+    @inject(TYPES.SongQueue) songQueue: Map<string, SongQueue>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
     @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
   ) {

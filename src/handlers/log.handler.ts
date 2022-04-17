@@ -21,7 +21,7 @@ export default class LogHandler {
    *
    * @param {*} sLog
    */
-  public log = async (sLog: any) => {
+  public log = async (sLog: string) => {
     console.log(sLog)
     sLog = new Date().toLocaleString() + ': ' + sLog
     this.fs.readFile(
@@ -41,7 +41,7 @@ export default class LogHandler {
    * @param {*} sLog
    * @returns
    */
-  private salvarLogFile = async (sLog: any) => {
+  private salvarLogFile = async (sLog: string) => {
     return new Promise<void>((resolve, reject) => {
       this.fs.writeFile(
         `${this.logDir}/${this.fileName}.txt`,

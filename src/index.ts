@@ -6,8 +6,8 @@ import { WebService } from './services'
 import { TYPES } from './types'
 
 global.appRoot = path.resolve(__dirname)
-let bot = container.get<Bot>(TYPES.Bot)
+const bot = container.get<Bot>(TYPES.Bot)
 bot.init()
 
-let webService = container.get<WebService>(TYPES.WebService)
+const webService = container.get<WebService>(TYPES.WebService)
 webService.init()

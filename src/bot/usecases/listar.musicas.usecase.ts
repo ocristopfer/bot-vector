@@ -2,15 +2,15 @@ import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
-import { BotComands, Song } from '../interfaces'
+import { BotComands, Song, SongQueue } from '../interfaces'
 
 @injectable()
 export default class BotComandListarMusicas implements BotComands {
   private logHandler: LogHandler
-  private songQueue: Map<any, any>
+  private songQueue: Map<string, SongQueue>
   constructor(
     @inject(TYPES.LogHandler) logHandler: LogHandler,
-    @inject(TYPES.SongQueue) songQueue: Map<any, any>,
+    @inject(TYPES.SongQueue) songQueue: Map<string, SongQueue>,
   ) {
     this.logHandler = logHandler
     this.songQueue = songQueue
@@ -25,7 +25,7 @@ export default class BotComandListarMusicas implements BotComands {
     try {
       const serverQueue = this.songQueue.get(message.guild.id)
       const defaultMessage = 'Nenhuma música na fila'
-      if (!serverQueue || serverQueue.song?.length === 0)
+      if (!serverQueue || serverQueue.songs?.length === 0)
         return message.reply(defaultMessage)
 
       let listaMusicas = '\n '

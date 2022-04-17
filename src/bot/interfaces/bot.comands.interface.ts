@@ -1,3 +1,5 @@
+import { Message } from 'discord.js'
+
 export interface BotComands {
-  execute: any
+  execute(message: Message): void
 }

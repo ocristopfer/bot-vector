@@ -8,11 +8,11 @@ import { Song, SongQueue } from '../interfaces'
 
 @injectable()
 export default class MusicHandler {
-  private songQueue: any
+  private songQueue: Map<string, SongQueue>
   private logHandler: LogHandler
   private botDesconectar: BotComandDesconectar
   constructor(
-    @inject(TYPES.SongQueue) SongQueue: Map<any, any>,
+    @inject(TYPES.SongQueue) SongQueue: Map<string, SongQueue>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
     @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
   ) {
@@ -73,8 +73,7 @@ export default class MusicHandler {
       this.songQueue.set(message.guild.id, songQueue)
 
       try {
-        var connection = await voiceChannel.join()
-        songQueue.connection = connection
+        songQueue.connection = await voiceChannel.join()
         message.reply(`Reproduzindo: ${song.title}!`)
         this.logHandler.log(`Reproduzindo: ${song.title}!`)
         this.tocarMusica(message, songQueue.songs[0])

@@ -1,4 +1,4 @@
-import { Client } from 'discord.js'
+import { Client, TextChannel, VoiceState } from 'discord.js'
 import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
@@ -15,7 +15,7 @@ export default class BotUserChangeChannelHandler {
     this.logHandler = logHandler
   }
 
-  public handler = (oldMember: any, newMember: any) => {
+  public handler = (oldMember: VoiceState, newMember: VoiceState) => {
     if (oldMember.channelID !== newMember.channelID) {
       this.usuarioMudouDeCanal(oldMember, false)
       this.usuarioMudouDeCanal(newMember, true)
@@ -38,7 +38,7 @@ export default class BotUserChangeChannelHandler {
           } do canal de voz ${resolve}`
           oMember.guild.channels.cache
             .filter(
-              (channel: any) =>
+              (channel: TextChannel) =>
                 channel.name === 'chat' || channel.name === 'geral',
             )
             .first()
