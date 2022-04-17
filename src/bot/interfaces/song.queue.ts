@@ -1,4 +1,6 @@
-interface SongQueue {
+import { Song } from '.'
+
+export interface SongQueue {
   textChannel: any
   voiceChannel: any
   connection: any

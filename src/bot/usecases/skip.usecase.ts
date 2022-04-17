@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 import MusicHandler from '../handlers/music.handler'
+import { BotComands } from '../interfaces'
 
 @injectable()
 export default class BotComandStop implements BotComands {

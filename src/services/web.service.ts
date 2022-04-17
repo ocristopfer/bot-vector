@@ -1,9 +1,9 @@
-import * as express from 'express'
+import express from 'express'
 import * as https from 'https'
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
-import { TYPES } from '../types.js'
-import LogHandler from '../handlers/log.handler.js'
+import { TYPES } from '../types'
+import LogHandler from '../handlers/log.handler'
 
 /**
  * Criar servidor web para funcionamento do heroku

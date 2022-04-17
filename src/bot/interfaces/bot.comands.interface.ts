@@ -1,3 +1,3 @@
-interface BotComands {
+export interface BotComands {
   execute: any
 }

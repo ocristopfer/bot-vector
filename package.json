@@ -15,36 +15,26 @@
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^5.0.0",
     "inversify": "^6.0.1",
-    "nodemon": "^2.0.15",
     "opusscript": "0.0.7",
     "reflect-metadata": "^0.1.13",
-    "source-map-loader": "^3.0.1",
-    "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^3.14.1",
     "typescript": "^4.6.3",
-    "youtube-v3-api": "^1.1.1",
-    "ytdl-core": "^4.8.3",
-    "ytdl-core-discord": "^1.2.2"
+    "ytdl-core": "^4.11.0"
   },
   "scripts": {
     "start": "yarn build && node dist/index.js",
-    "debug": "yarn build && nodemon --ignore src/logs/ dist/index.js",
+    "debug": "nodemon --ignore src/logs/ src/index.ts",
     "build": "tsc --build && yarn copyhtml",
     "clean": "tsc --build --clean",
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyhtml": "copyfiles -u 1 src/public/* dist/"
   },
-  "pkg": {
-    "scripts": "src/**/*.js",
-    "assets": [
-      "./node_modules/**"
-    ]
-  },
   "author": "@ocristopfer",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.13.0",
+    "nodemon": "^2.0.15",
     "prettier": "^2.6.2"
   }
 }

@@ -1,8 +1,8 @@
 import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
-
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
+import { BotComands } from '../interfaces'
 import BotComandDesconectar from './desconectar.usecase'
 
 @injectable()

@@ -4,7 +4,6 @@ import { Container } from 'inversify'
 import Bot from './bot/bot'
 import BotGateway from './bot/bot.gateway'
 import { YouTubeService } from './bot/services'
-
 import { LogHandler } from './handlers'
 import MusicHandler from './bot/handlers/music.handler'
 import { WebService } from './services'
@@ -23,7 +22,7 @@ import {
 import BotComandsHandler from './bot/handlers/comands.handler'
 import BotUserChangeChannelHandler from './bot/handlers/user.change.channel.handler'
 
-let container = new Container()
+const container = new Container()
 
 container.bind<Bot>(TYPES.Bot).to(Bot).inSingletonScope()
 container.bind<BotGateway>(TYPES.BotGateway).to(BotGateway).inSingletonScope()
@@ -42,14 +41,14 @@ container
   .to(MusicHandler)
   .inSingletonScope()
 
-//Services
+// Services
 container.bind<WebService>(TYPES.WebService).to(WebService).inSingletonScope()
 container
   .bind<YouTubeService>(TYPES.YouTubeService)
   .to(YouTubeService)
   .inSingletonScope()
 
-//Bot Comands
+// Bot Comands
 container
   .bind<BotComandPlay>(TYPES.BotComandplay)
   .to(BotComandPlay)
@@ -94,7 +93,7 @@ container
   .bind<BotComandExit>(TYPES.BotComandexit)
   .to(BotComandExit)
   .inSingletonScope()
-//const
+// const
 container.bind<Client>(TYPES.Client).toConstantValue(new Client())
 container.bind<Map<any, any>>(TYPES.SongQueue).toConstantValue(new Map())
 container.bind<string>(TYPES.Prefix).toConstantValue(process.env.PREFIX || '!')

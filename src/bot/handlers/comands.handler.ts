@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify'
 import { TYPES } from '../../types'
 import container from './../../inversify.config'
 import { LogHandler } from '../../handlers'
+import { BotComands } from '../interfaces'
 
 @injectable()
 export default class BotComandsHandler {
@@ -24,7 +25,7 @@ export default class BotComandsHandler {
     this.logHandler.log(`Comando executado: ${messageContent}`)
     try {
       messageContent = messageContent.split(' ')[0].slice(1)
-      let useCase = container.get<BotComands>(
+      const useCase = container.get<BotComands>(
         TYPES[`BotComand${messageContent}`],
       )
       useCase.execute(message)

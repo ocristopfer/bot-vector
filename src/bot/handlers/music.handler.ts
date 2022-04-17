@@ -1,14 +1,14 @@
-import * as ytdl from 'ytdl-core'
+import ytdl from 'ytdl-core'
 import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../../types.js'
-import LogHandler from '../../handlers/log.handler.js'
+import { TYPES } from '../../types'
+import LogHandler from '../../handlers/log.handler'
 import { BotComandDesconectar } from '../usecases/index'
+import { Song, SongQueue } from '../interfaces'
 
 @injectable()
 export default class MusicHandler {
   private songQueue: any
-  private ytdl: any
   private logHandler: LogHandler
   private botDesconectar: BotComandDesconectar
   constructor(
@@ -17,7 +17,6 @@ export default class MusicHandler {
     @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
   ) {
     this.songQueue = SongQueue
-    this.ytdl = ytdl
     this.logHandler = logHandler
     this.botDesconectar = botDesconectar
   }
@@ -32,7 +31,7 @@ export default class MusicHandler {
    */
   private getVideoInfo = async (message: Message, url: string) => {
     const songQueue = this.songQueue.get(message.guild.id)
-    this.ytdl.getInfo(url).then(
+    ytdl.getInfo(url).then(
       (songInfo) => {
         this.prepararMusica(message, songQueue, songInfo)
       },
@@ -105,7 +104,7 @@ export default class MusicHandler {
     } else {
       const dispatcher = serverQueue.connection
         .play(
-          await this.ytdl(song.url, {
+          ytdl(song.url, {
             filter: 'audioonly',
             quality: 'highestaudio',
             highWaterMark: 1 << 25,

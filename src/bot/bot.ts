@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify'
-import LogHandler from '../handlers/log.handler.js'
-import { TYPES } from '../types.js'
-import BotGateway from './bot.gateway.js'
+import LogHandler from '../handlers/log.handler'
+import { TYPES } from '../types'
+import BotGateway from './bot.gateway'
 
 @injectable()
 export default class Bot {
