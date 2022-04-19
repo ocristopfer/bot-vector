@@ -27,16 +27,20 @@
     "debug": "nodemon --ignore src/logs/ src/index.ts",
     "build": "tsc --build && yarn copyhtml",
     "clean": "tsc --build --clean",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "copyhtml": "copyfiles -u 1 src/public/* dist/"
   },
   "author": "@ocristopfer",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "eslint": "^8.13.0",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.15",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "ts-jest": "^27.1.4",
+    "ts-mockito": "^2.6.1"
   }
 }

@@ -1,19 +1,20 @@
 import * as fs from 'fs'
-import { injectable } from 'inversify'
+import { inject, injectable } from 'inversify'
 import * as path from 'path'
+import { TYPES } from '../types'
 
 @injectable()
 export default class LogHandler {
   private fileName: string
   private fs: typeof fs
   private logDir: string
-  constructor() {
+  constructor(@inject(TYPES.AppRoot) appRoot: string) {
     this.fileName = new Date()
       .toLocaleDateString()
       .trim()
       .replace(/[^\w\s]/gi, '_')
     this.fs = fs
-    this.logDir = path.resolve(`${global.appRoot}/logs`)
+    this.logDir = path.resolve(`${appRoot}/logs`) || './logs'
     this.checarSeLogDirExiste()
   }
 

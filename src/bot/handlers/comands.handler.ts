@@ -18,6 +18,11 @@ export default class BotComandsHandler {
     this.logHandler = logHandler
   }
 
+  /**
+   * 
+   * @param message 
+   * @returns 
+   */
   public handle = async (message: Message) => {
     let messageContent = message.content.toLocaleLowerCase()
     if (message.author.bot) return

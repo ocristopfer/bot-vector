@@ -15,7 +15,7 @@ export default class YouTubeService {
    * @param {*} url
    * @returns string
    */
-  getScript = async (url: any) => {
+  getScript = async (url: string) => {
     return new Promise((resolve, reject) => {
       let client = null
 
@@ -51,12 +51,12 @@ export default class YouTubeService {
    * @param {*} args
    * @returns string
    */
-  buscarYouTubeNoApi = async (args: any) => {
+  buscarYouTubeNoApi = async (args: string) => {
     return await this.getScript(
       `${this.youTubeUrl}/results?search_query=${args.replace(/\s/g, '+')}`,
     )
       .then((resolve) => {
-        var idVideo = resolve.toString().match(/.watch.v=[^"]*/gm)[0]
+        const idVideo = resolve.toString().match(/.watch.v=[^"]*/gm)[0]
         return `${this.youTubeUrl}${idVideo}`
       })
       .catch((error) => {

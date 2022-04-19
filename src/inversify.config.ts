@@ -22,6 +22,7 @@ import {
 import BotComandsHandler from './bot/handlers/comands.handler'
 import BotUserChangeChannelHandler from './bot/handlers/user.change.channel.handler'
 import { SongQueue } from './bot/interfaces'
+import path from 'path'
 
 const container = new Container()
 
@@ -95,6 +96,7 @@ container
   .to(BotComandExit)
   .inSingletonScope()
 // const
+container.bind<string>(TYPES.AppRoot).toConstantValue(path.resolve(__dirname))
 container.bind<Client>(TYPES.Client).toConstantValue(new Client())
 container
   .bind<Map<string, SongQueue>>(TYPES.SongQueue)

@@ -1,5 +1,6 @@
 export const TYPES = {
   Prefix: Symbol('Prefix'),
+  AppRoot: Symbol('AppRoot'),
   Bot: Symbol('Bot'),
   BotGateway: Symbol('BotGateway'),
   BotComandsHandler: Symbol('BotComandsHandler'),

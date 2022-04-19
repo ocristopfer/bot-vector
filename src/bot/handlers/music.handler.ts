@@ -21,6 +21,12 @@ export default class MusicHandler {
     this.botDesconectar = botDesconectar
   }
 
+  /**
+   *
+   * @param message
+   * @param url
+   * @returns
+   */
   public addMusicaNaFila = (message: Message, url: string) => {
     return this.getVideoInfo(message, url)
   }
@@ -44,9 +50,9 @@ export default class MusicHandler {
 
   /**
    *
-   * @param {*} message
-   * @param {*} songQueue
-   * @param {*} songInfo
+   * @param message
+   * @param songQueue
+   * @param songInfo
    * @returns
    */
   private prepararMusica = async (
@@ -91,8 +97,8 @@ export default class MusicHandler {
 
   /**
    *
-   * @param {*} guild
-   * @param {*} song
+   * @param message
+   * @param song
    * @returns
    */
   private tocarMusica = async (message: Message, song: Song) => {
@@ -127,9 +133,10 @@ export default class MusicHandler {
     this.logHandler.log(`Musica ${song.title} encerrada!`)
     this.proximaMusica(message)
   }
+
   /**
    *
-   * @param {*} guild
+   * @param message
    */
   proximaMusica = async (message: Message) => {
     const guild = message.guild
