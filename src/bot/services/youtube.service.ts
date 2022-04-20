@@ -1,8 +1,11 @@
 import * as http from 'http'
 import * as https from 'https'
 import { inject, injectable } from 'inversify'
+import { YoutubeDataAPI } from 'youtube-v3-api'
+
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
+
 @injectable()
 export default class YouTubeService {
   private youTubeUrl = 'https://www.youtube.com'
@@ -15,7 +18,7 @@ export default class YouTubeService {
    * @param {*} url
    * @returns string
    */
-  getScript = async (url: string) => {
+  private getScript = async (url: string) => {
     return new Promise((resolve, reject) => {
       let client = null
 
@@ -51,7 +54,7 @@ export default class YouTubeService {
    * @param {*} args
    * @returns string
    */
-  buscarYouTubeNoApi = async (args: string) => {
+  public buscarYouTubeNoApi = async (args: string) => {
     return await this.getScript(
       `${this.youTubeUrl}/results?search_query=${args.replace(/\s/g, '+')}`,
     )
@@ -62,6 +65,24 @@ export default class YouTubeService {
       .catch((error) => {
         this.logHandler.log(`Erro inesperado: ${error}`)
         return ''
+      })
+  }
+
+  public buscarYouTubeApiPlayList = async (
+    playListId: string,
+    maxResults: number,
+  ) => {
+    const youtubeDataAPI = new YoutubeDataAPI(process.env.YOUTUBEAPI)
+    return youtubeDataAPI
+      .searchPlaylistItems(playListId, maxResults)
+      .then((result: any) => {
+        const lstUrl: Array<string> = []
+        result.items.forEach((youTubeVideo) => {
+          lstUrl.push(
+            this.youTubeUrl + '/watch?v=' + youTubeVideo.contentDetails.videoId,
+          )
+        })
+        return lstUrl
       })
   }
 }

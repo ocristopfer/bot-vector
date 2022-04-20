@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { Client } from 'discord.js'
 import { Container } from 'inversify'
+import { YoutubeDataAPI } from 'youtube-v3-api'
 import Bot from './bot/bot'
 import BotGateway from './bot/bot.gateway'
 import { YouTubeService } from './bot/services'
@@ -23,6 +24,7 @@ import BotComandsHandler from './bot/handlers/comands.handler'
 import BotUserChangeChannelHandler from './bot/handlers/user.change.channel.handler'
 import { SongQueue } from './bot/interfaces'
 import path from 'path'
+import BotComandPlayList from './bot/usecases/play.list.usecase'
 
 const container = new Container()
 
@@ -51,6 +53,11 @@ container
   .inSingletonScope()
 
 // Bot Comands
+container
+  .bind<BotComandPlayList>(TYPES.BotComandplaylist)
+  .to(BotComandPlayList)
+  .inSingletonScope()
+
 container
   .bind<BotComandPlay>(TYPES.BotComandplay)
   .to(BotComandPlay)
@@ -98,6 +105,11 @@ container
 // const
 container.bind<string>(TYPES.AppRoot).toConstantValue(path.resolve(__dirname))
 container.bind<Client>(TYPES.Client).toConstantValue(new Client())
+
+container
+  .bind<object>(TYPES.YoutubeDataAPI)
+  .toConstantValue(new YoutubeDataAPI(process.env.YOUTUBEAPI))
+
 container
   .bind<Map<string, SongQueue>>(TYPES.SongQueue)
   .toConstantValue(new Map())

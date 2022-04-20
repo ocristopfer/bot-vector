@@ -5,9 +5,10 @@ import { TYPES } from '../../types'
 import MusicHandler from '../handlers/music.handler'
 import { BotComands } from '../interfaces'
 import { YouTubeService } from '../services'
+import ValidHttpURL from '../util/valid.http.url'
 
 @injectable()
-export default class BotComandPlay implements BotComands {
+export default class BotComandPlayList implements BotComands {
   private logHandler: LogHandler
   private musicHandler: MusicHandler
   private youTubeService: YouTubeService
@@ -28,16 +29,21 @@ export default class BotComandPlay implements BotComands {
    */
   public execute = async (message: Message) => {
     try {
-      const valorInformado: string = message.content
+      const comandoInformado: string = message.content
         .split(' ')
         .splice(1)
         .join(' ')
-      const lstValorInformado = valorInformado.split(',')
-      if (lstValorInformado.length > 0) {
-        this.musicHandler.addListaAFila(message, lstValorInformado)
-      } else {
-        this.musicHandler.validarEAdicionarMusica(message, valorInformado)
+
+      let listId = comandoInformado
+      if (ValidHttpURL.IsUrl(listId)) {
+        listId = new URL(listId).searchParams.get('list')
       }
+      const lstUrl = await this.youTubeService.buscarYouTubeApiPlayList(
+        listId,
+        20,
+      )
+
+      return this.musicHandler.addListaAFila(message, lstUrl)
     } catch (error) {
       this.logHandler.log(`Erro inesperado: ${error}`)
       return message.reply('Erro inesperado')

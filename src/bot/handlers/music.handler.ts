@@ -5,20 +5,25 @@ import { TYPES } from '../../types'
 import LogHandler from '../../handlers/log.handler'
 import { BotComandDesconectar } from '../usecases/index'
 import { Song, SongQueue } from '../interfaces'
+import { YouTubeService } from '../services'
+import ValidHttpURL from '../util/valid.http.url'
 
 @injectable()
 export default class MusicHandler {
   private songQueue: Map<string, SongQueue>
   private logHandler: LogHandler
   private botDesconectar: BotComandDesconectar
+  private youTubeService: YouTubeService
   constructor(
     @inject(TYPES.SongQueue) SongQueue: Map<string, SongQueue>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
     @inject(TYPES.BotComanddesconectar) botDesconectar: BotComandDesconectar,
+    @inject(TYPES.YouTubeService) youTubeService: YouTubeService,
   ) {
     this.songQueue = SongQueue
     this.logHandler = logHandler
     this.botDesconectar = botDesconectar
+    this.youTubeService = youTubeService
   }
 
   /**
@@ -138,7 +143,7 @@ export default class MusicHandler {
    *
    * @param message
    */
-  proximaMusica = async (message: Message) => {
+  public proximaMusica = async (message: Message) => {
     const guild = message.guild
     const songQueue: SongQueue = this.songQueue.get(guild.id)
     if (songQueue.songs.length > 0) {
@@ -146,6 +151,62 @@ export default class MusicHandler {
       this.tocarMusica(message, songQueue.songs[0])
     } else {
       this.botDesconectar.execute(message)
+    }
+  }
+
+  public addListaAFila = async (
+    message: Message,
+    lstValorInformado: Array<string>,
+  ) => {
+    if (lstValorInformado.length > 0) {
+      const valorInformado = lstValorInformado[0]
+      this.validarEAdicionarMusica(message, valorInformado)
+        .then(() => {
+          lstValorInformado.shift()
+          if (lstValorInformado.length > 0) {
+            this.addListaAFila(message, lstValorInformado)
+          }
+        })
+        .catch((error) => {
+          this.logHandler.log(`Erro inesperado: ${error}`)
+          return message.reply('Erro inesperado')
+        })
+    }
+  }
+
+  public validarEAdicionarMusica = async (
+    message: Message,
+    valorInformado: string,
+  ) => {
+    if (valorInformado === '') {
+      return message.reply(
+        'Informe o nome ou a url do video a ser reproduzido!',
+      )
+    }
+    const voiceChannel = message.member.voice.channel
+    if (!voiceChannel)
+      return message.reply(
+        'Você precisar está em um canal de voz para reproduzir musicas!',
+      )
+    const permissions = voiceChannel.permissionsFor(message.client.user)
+    if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+      return message.reply(
+        'I need the permissions to join and speak in your voice channel!',
+      )
+    }
+
+    if (!ValidHttpURL.IsUrl(valorInformado)) {
+      return this.youTubeService
+        .buscarYouTubeNoApi(valorInformado)
+        .then((valorInformado) => {
+          return this.addMusicaNaFila(message, valorInformado)
+        })
+        .catch((error) => {
+          this.logHandler.log(`Erro inesperado: ${error}`)
+          return message.reply('Erro inesperado')
+        })
+    } else {
+      return this.addMusicaNaFila(message, valorInformado)
     }
   }
 }
