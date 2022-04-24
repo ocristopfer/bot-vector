@@ -4,6 +4,10 @@ import * as fs from 'fs'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 import { BotComands, SongQueue } from '../interfaces'
+import {
+  DiscordGatewayAdapterCreator,
+  joinVoiceChannel,
+} from '@discordjs/voice'
 
 @injectable()
 export default class BotComandListen implements BotComands {
@@ -33,7 +37,12 @@ export default class BotComandListen implements BotComands {
         }
 
         this.SongQueue.set(message.guild.id, songQueue)
-        songQueue.connection = await voiceChannel.join()
+        songQueue.connection = joinVoiceChannel({
+          channelId: message.channel.id,
+          guildId: guild.id,
+          adapterCreator:
+            guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
+        })
       }
 
       const audio = songQueue.connection.receiver.createStream(message.member, {

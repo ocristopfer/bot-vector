@@ -7,6 +7,10 @@ import { BotComandDesconectar } from '../usecases/index'
 import { Song, SongQueue } from '../interfaces'
 import { YouTubeService } from '../services'
 import ValidHttpURL from '../util/valid.http.url'
+import {
+  DiscordGatewayAdapterCreator,
+  joinVoiceChannel,
+} from '@discordjs/voice'
 
 @injectable()
 export default class MusicHandler {
@@ -84,7 +88,12 @@ export default class MusicHandler {
       this.songQueue.set(message.guild.id, songQueue)
 
       try {
-        songQueue.connection = await voiceChannel.join()
+        songQueue.connection = songQueue.connection = joinVoiceChannel({
+          channelId: message.channel.id,
+          guildId: message.guild.id,
+          adapterCreator: message.guild
+            .voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
+        })
         message.reply(`Reproduzindo: ${song.title}!`)
         this.logHandler.log(`Reproduzindo: ${song.title}!`)
         this.tocarMusica(message, songQueue.songs[0])

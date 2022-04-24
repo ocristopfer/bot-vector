@@ -62,7 +62,7 @@ export default class BotGateway {
       this.guildMemberSpeakingHandler.handler(member, speaking)
     })
 
-    this.botClient.on('message', async (message) => {
+    this.botClient.on('messageCreate', async (message) => {
       this.botComandsHandler.handle(message)
     })
   }

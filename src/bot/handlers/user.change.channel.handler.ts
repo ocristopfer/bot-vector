@@ -16,7 +16,7 @@ export default class UserChangeChannelHandler {
   }
 
   public handler = (oldMember: VoiceState, newMember: VoiceState) => {
-    if (oldMember.channelID !== newMember.channelID) {
+    if (oldMember.channelId !== newMember.channelId) {
       this.usuarioMudouDeCanal(oldMember, false)
       this.usuarioMudouDeCanal(newMember, true)
     }
