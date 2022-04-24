@@ -18,15 +18,19 @@ import {
   BotComandPause,
   BotComandPing,
   BotComandPlay,
+  BotComandPlayList,
   BotComandResume,
   BotComandSkip,
   BotComandStop,
 } from './bot/usecases'
-import BotComandsHandler from './bot/handlers/comands.handler'
-import BotUserChangeChannelHandler from './bot/handlers/user.change.channel.handler'
+
 import { SongQueue } from './bot/interfaces'
 import path from 'path'
-import BotComandPlayList from './bot/usecases/play.list.usecase'
+import {
+  BotComandsHandler,
+  GuildMemberSpeakingHandler,
+  UserChangeChannelHandler,
+} from './bot/handlers'
 
 const container = new Container()
 
@@ -37,8 +41,13 @@ container
   .to(BotComandsHandler)
   .inSingletonScope()
 container
-  .bind<BotUserChangeChannelHandler>(TYPES.BotUserChangeChannelHandler)
-  .to(BotUserChangeChannelHandler)
+  .bind<UserChangeChannelHandler>(TYPES.UserChangeChannelHandler)
+  .to(UserChangeChannelHandler)
+  .inSingletonScope()
+
+container
+  .bind<GuildMemberSpeakingHandler>(TYPES.GuildMemberSpeakingHandler)
+  .to(GuildMemberSpeakingHandler)
   .inSingletonScope()
 
 container.bind<LogHandler>(TYPES.LogHandler).to(LogHandler).inSingletonScope()

@@ -2,26 +2,33 @@ import { Client } from 'discord.js'
 import LogHandler from '../handlers/log.handler'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../types'
-import BotComandsHandler from './handlers/comands.handler'
-import BotUserChangeChannelHandler from './handlers/user.change.channel.handler'
+import {
+  BotComandsHandler,
+  GuildMemberSpeakingHandler,
+  UserChangeChannelHandler,
+} from './handlers'
 
 @injectable()
 export default class BotGateway {
   private botClient: Client
   private logHandler: LogHandler
   private botComandsHandler: BotComandsHandler
-  private botUserChangeChannelHandler: BotUserChangeChannelHandler
+  private userChangeChannelHandler: UserChangeChannelHandler
+  private guildMemberSpeakingHandler: GuildMemberSpeakingHandler
   constructor(
     @inject(TYPES.Client) botClient: Client,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
     @inject(TYPES.BotComandsHandler) botComandsHandler: BotComandsHandler,
-    @inject(TYPES.BotUserChangeChannelHandler)
-    botUserChangeChannelHandler: BotUserChangeChannelHandler,
+    @inject(TYPES.UserChangeChannelHandler)
+    userChangeChannelHandler: UserChangeChannelHandler,
+    @inject(TYPES.GuildMemberSpeakingHandler)
+    guildMemberSpeakingHandler: GuildMemberSpeakingHandler,
   ) {
     this.botClient = botClient
     this.logHandler = logHandler
     this.botComandsHandler = botComandsHandler
-    this.botUserChangeChannelHandler = botUserChangeChannelHandler
+    this.userChangeChannelHandler = userChangeChannelHandler
+    this.guildMemberSpeakingHandler = guildMemberSpeakingHandler
   }
   public init = () => {
     this.eventsBot()
@@ -48,11 +55,15 @@ export default class BotGateway {
     })
 
     this.botClient.on('voiceStateUpdate', async (oldMember, newMember) => {
-      this.botUserChangeChannelHandler.handler(oldMember, newMember)
+      this.userChangeChannelHandler.handler(oldMember, newMember)
+    })
+
+    this.botClient.on('guildMemberSpeaking', async (member, speaking) => {
+      this.guildMemberSpeakingHandler.handler(member, speaking)
     })
 
     this.botClient.on('message', async (message) => {
-      return this.botComandsHandler.handle(message)
+      this.botComandsHandler.handle(message)
     })
   }
 }

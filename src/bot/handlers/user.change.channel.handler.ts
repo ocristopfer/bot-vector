@@ -4,7 +4,7 @@ import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 
 @injectable()
-export default class BotUserChangeChannelHandler {
+export default class UserChangeChannelHandler {
   private botClient: Client
   private logHandler: LogHandler
   constructor(
