@@ -15,6 +15,7 @@ import {
   BotComandExit,
   BotComandHelp,
   BotComandListarMusicas,
+  BotComandListen,
   BotComandPause,
   BotComandPing,
   BotComandPlay,
@@ -123,6 +124,12 @@ container
   .bind<BotComandResume>(TYPES.BotComandresume)
   .to(BotComandResume)
   .inSingletonScope()
+
+container
+  .bind<BotComandListen>(TYPES.BotComandlisten)
+  .to(BotComandListen)
+  .inSingletonScope()
+
 // const
 container.bind<string>(TYPES.AppRoot).toConstantValue(path.resolve(__dirname))
 container.bind<Client>(TYPES.Client).toConstantValue(new Client())

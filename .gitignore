@@ -38,3 +38,5 @@ src/config.json
 *.dccache
 src/logs/*.txt
 dist/
+user_audio
+yarn.lock

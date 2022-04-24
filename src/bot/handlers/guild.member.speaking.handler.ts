@@ -2,7 +2,7 @@ import { injectable } from 'inversify'
 
 @injectable()
 export default class GuildMemberSpeakingHandler {
-  public handler = (member, speaking) => {
-    console.log(member, speaking)
+  public handler = async (member, speaking) => {
+    //TODO implemente speeach converter
   }
 }

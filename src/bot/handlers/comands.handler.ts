@@ -35,7 +35,6 @@ export default class BotComandsHandler {
       )
       useCase.execute(message)
     } catch (error) {
-      throw new Error('Erro ao executar comando')
       this.logHandler.log(`Erro ao executar comando, erro: ${error}`)
       message.reply('Comando não encontrado')
     }
