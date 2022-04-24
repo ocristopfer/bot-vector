@@ -2,22 +2,18 @@ import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
-import MusicHandler from '../handlers/music.handler'
 import { BotComands, SongQueue } from '../interfaces'
 
 @injectable()
-export default class BotComandStop implements BotComands {
+export default class BotComandResume implements BotComands {
   private logHandler: LogHandler
-  private musicHandler: MusicHandler
   private songQueue: Map<string, SongQueue>
   constructor(
     @inject(TYPES.SongQueue) songQueue: Map<string, SongQueue>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
-    @inject(TYPES.MusicHandler) musicHandler: MusicHandler,
   ) {
     this.songQueue = songQueue
     this.logHandler = logHandler
-    this.musicHandler = musicHandler
   }
 
   /**
@@ -32,9 +28,12 @@ export default class BotComandStop implements BotComands {
         return message.reply(
           'Você precisar está em um canal de voz para reproduzir musicas!',
         )
-      if (!serverQueue) return message.reply('Não há musica para ser pulada!')
-      serverQueue.connection.dispatcher.destroy()
-      this.musicHandler.proximaMusica(message)
+      if (!serverQueue)
+        return message.reply('Não há musica para ser reproduzida!')
+      await serverQueue.connection.dispatcher.resume()
+      await serverQueue.connection.dispatcher.pause()
+      await serverQueue.connection.dispatcher.resume()
+      return message.reply(`Reproduzindo música ${serverQueue.songs[0].title}`)
     } catch (error) {
       return this.logHandler.errorLog(error, message)
     }

@@ -34,8 +34,7 @@ export default class BotComandListarMusicas implements BotComands {
       })
       return message.reply(`${listaMusicas}`)
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

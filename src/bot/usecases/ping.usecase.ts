@@ -24,8 +24,7 @@ export default class BotComandPing implements BotComands {
         }ms. API Latency is ${Math.round(this.botClient.ws.ping)}ms`,
       )
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

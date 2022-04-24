@@ -25,8 +25,7 @@ export default class BotComandDesconectar implements BotComands {
         this.SongQueue.delete(guild.id)
       }
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

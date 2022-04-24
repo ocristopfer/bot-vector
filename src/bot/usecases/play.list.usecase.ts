@@ -42,11 +42,11 @@ export default class BotComandPlayList implements BotComands {
         listId,
         20,
       )
-
-      return this.musicHandler.addListaAFila(message, lstUrl)
+      if (lstUrl) {
+        return this.musicHandler.addListaAFila(message, lstUrl)
+      }
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

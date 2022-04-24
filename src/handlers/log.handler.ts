@@ -1,3 +1,4 @@
+import { Message } from 'discord.js'
 import * as fs from 'fs'
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
@@ -25,16 +26,52 @@ export default class LogHandler {
   public log = async (sLog: string) => {
     console.log(sLog)
     sLog = new Date().toLocaleString() + ': ' + sLog
-    this.fs.readFile(
-      `${this.logDir}/${this.fileName}.txt`,
-      'utf8',
-      (err, data) => {
-        if (err) {
+    this.abrirLogFile()
+      .then((sLogFile) => {
+        if (sLogFile !== null) {
+          return this.salvarLogFile((sLogFile += '\n' + sLog))
+        } else {
           return this.salvarLogFile(sLog)
         }
-        return this.salvarLogFile((data += `\n${sLog}`))
-      },
-    )
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  public errorLog(execption: unknown, message: Message) {
+    console.log('Erro inesperado')
+    const sLog = `${new Date().toDateString()}: Erro inesperado ${execption}`
+    this.abrirLogFile()
+      .then((sLogFile) => {
+        if (sLogFile !== null) {
+          return this.salvarLogFile((sLogFile += '\n' + sLog))
+        } else {
+          return this.salvarLogFile(sLog)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+    if (message) {
+      message.reply(sLog)
+    }
+  }
+
+  private abrirLogFile() {
+    return new Promise<string>((resolve, reject) => {
+      this.fs.readFile(
+        `${this.logDir}/${this.fileName}.txt`,
+        'utf8',
+        (err, data) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(data)
+        },
+      )
+    })
   }
 
   /**

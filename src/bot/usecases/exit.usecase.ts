@@ -23,8 +23,7 @@ export default class BotComandExit implements BotComands {
           .catch()
       }
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

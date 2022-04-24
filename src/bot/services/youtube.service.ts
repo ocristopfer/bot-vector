@@ -29,7 +29,7 @@ export default class YouTubeService {
       }
 
       client
-        .get(url, (resp) => {
+        .get(url, (resp: any) => {
           let data = ''
 
           // A chunk of data has been recieved.
@@ -42,8 +42,8 @@ export default class YouTubeService {
             resolve(data)
           })
         })
-        .on('error', (error) => {
-          this.logHandler.log(`Erro inesperado: ${error}`)
+        .on('error', (error: any) => {
+          this.logHandler.errorLog(error, null)
           reject(error)
         })
     })
@@ -63,11 +63,16 @@ export default class YouTubeService {
         return `${this.youTubeUrl}${idVideo}`
       })
       .catch((error) => {
-        this.logHandler.log(`Erro inesperado: ${error}`)
-        return ''
+        return this.logHandler.errorLog(error, null)
       })
   }
 
+  /**
+   * Busca playlist diretamente na api do youtube e retorna as urls dos videos.
+   * @param playListId
+   * @param maxResults
+   * @returns
+   */
   public buscarYouTubeApiPlayList = async (
     playListId: string,
     maxResults: number,
@@ -83,6 +88,9 @@ export default class YouTubeService {
           )
         })
         return lstUrl
+      })
+      .catch((error) => {
+        return this.logHandler.errorLog(error, null)
       })
   }
 }

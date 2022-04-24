@@ -39,8 +39,7 @@ export default class BotComandPlay implements BotComands {
         this.musicHandler.validarEAdicionarMusica(message, valorInformado)
       }
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

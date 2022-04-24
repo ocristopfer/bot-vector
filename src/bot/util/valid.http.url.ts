@@ -1,5 +1,5 @@
 export default class ValidHttpURL {
-  public static IsUrl = (url) => {
+  public static IsUrl = (url: string) => {
     try {
       new URL(url)
     } catch (error) {

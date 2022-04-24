@@ -15,8 +15,10 @@ import {
   BotComandExit,
   BotComandHelp,
   BotComandListarMusicas,
+  BotComandPause,
   BotComandPing,
   BotComandPlay,
+  BotComandResume,
   BotComandSkip,
   BotComandStop,
 } from './bot/usecases'
@@ -101,6 +103,16 @@ container
 container
   .bind<BotComandExit>(TYPES.BotComandexit)
   .to(BotComandExit)
+  .inSingletonScope()
+
+container
+  .bind<BotComandPause>(TYPES.BotComandpause)
+  .to(BotComandPause)
+  .inSingletonScope()
+
+container
+  .bind<BotComandResume>(TYPES.BotComandresume)
+  .to(BotComandResume)
   .inSingletonScope()
 // const
 container.bind<string>(TYPES.AppRoot).toConstantValue(path.resolve(__dirname))

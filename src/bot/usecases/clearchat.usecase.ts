@@ -26,16 +26,14 @@ export default class BotComandClearChat implements BotComands {
           .then(() => {
             message.reply('Efetuada a limpeza do chat!')
           })
-          .catch((erro: any) => {
-            this.logHandler.log(erro)
+          .catch((error: any) => {
+            return this.logHandler.errorLog(error, message)
           })
       } catch (error) {
-        this.logHandler.log(error)
-        message.reply('Erro ao tentar limpar chat!')
+        return this.logHandler.errorLog(error, message)
       }
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

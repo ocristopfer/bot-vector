@@ -22,6 +22,19 @@ export default class BotComandHelp implements BotComands {
         'Reproduz áudio do vídeo do YouTube informado (adicione lista separada por virgula). ',
     },
     {
+      nome: 'playlist',
+      description:
+        'Reproduz playlist de video do YouTube (basta informar a url ou o Id da playlist) ',
+    },
+    {
+      nome: 'pause',
+      description: 'Pausa o áudio ',
+    },
+    {
+      nome: 'resume',
+      description: 'Retoma a reprodução do áudio ',
+    },
+    {
       nome: 'skip',
       description: 'Pula para o próximo áudio ',
     },
@@ -58,13 +71,12 @@ export default class BotComandHelp implements BotComands {
   public execute = async (message: Message) => {
     try {
       let help = 'Comandos: \n'
-      this.comandos.forEach((comand: any) => {
+      this.comandos.forEach((comand) => {
         help += `${this.prefix}${comand.nome}: ${comand.description} \n`
       })
       message.reply(help)
     } catch (error) {
-      this.logHandler.log(`Erro inesperado: ${error}`)
-      return message.reply('Erro inesperado')
+      return this.logHandler.errorLog(error, message)
     }
   }
 }

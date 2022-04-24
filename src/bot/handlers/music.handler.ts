@@ -112,14 +112,14 @@ export default class MusicHandler {
     if (!song) {
       return this.botDesconectar.execute(message)
     } else {
+      const stream = await ytdl(song.url, {
+        filter: 'audioonly',
+        quality: 'highestaudio',
+        highWaterMark: 1 << 25,
+      })
+
       const dispatcher = serverQueue.connection
-        .play(
-          ytdl(song.url, {
-            filter: 'audioonly',
-            quality: 'highestaudio',
-            highWaterMark: 1 << 25,
-          }),
-        )
+        .play(stream)
         .on('finish', () => {
           this.musicaEncerrada(message, song)
         })
@@ -130,6 +130,7 @@ export default class MusicHandler {
           this.logHandler.log(error)
           this.proximaMusica(message)
         })
+
       dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
     }
   }
@@ -199,7 +200,8 @@ export default class MusicHandler {
       return this.youTubeService
         .buscarYouTubeNoApi(valorInformado)
         .then((valorInformado) => {
-          return this.addMusicaNaFila(message, valorInformado)
+          if (valorInformado)
+            return this.addMusicaNaFila(message, valorInformado)
         })
         .catch((error) => {
           this.logHandler.log(`Erro inesperado: ${error}`)

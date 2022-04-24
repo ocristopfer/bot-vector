@@ -22,4 +22,6 @@ export const TYPES = {
   BotComandping: Symbol('BotComandPing'),
   BotComandhelp: Symbol('BotComandHelp'),
   BotComandexit: Symbol('BotComandExit'),
+  BotComandpause: Symbol('BotComandPause'),
+  BotComandresume: Symbol('BotComandResume'),
 }
