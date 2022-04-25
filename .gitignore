@@ -39,4 +39,3 @@ src/config.json
 src/logs/*.txt
 dist/
 user_audio
-yarn.lock

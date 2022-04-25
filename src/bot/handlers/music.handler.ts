@@ -126,7 +126,7 @@ export default class MusicHandler {
         .on('end', () => {
           this.musicaEncerrada(message, song)
         })
-        .on('error', (error: any) => {
+        .on('error', (error) => {
           this.logHandler.log(error)
           this.proximaMusica(message)
         })

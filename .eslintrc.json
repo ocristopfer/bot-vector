@@ -13,6 +13,7 @@
   "rules": {
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "no-any": [true, { "ignore-rest-args": true }]
   }
 }
