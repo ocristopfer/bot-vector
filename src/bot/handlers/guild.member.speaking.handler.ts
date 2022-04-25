@@ -38,22 +38,26 @@ export default class GuildMemberSpeakingHandler {
         this.convertPCM(
           path.resolve(`${this.appRoot}/user_audio${member.guild.id}.pcm`),
           `${this.appRoot}/user_audio${member.guild.id}.wav`,
-        ).then(() => {
-          let words = handle.processFile(
-            path.resolve(`${this.appRoot}/user_audio${member.guild.id}.wav`),
-          )
-          if (words.length > 0) {
-            member.guild.channels.cache
-              .filter(
-                (channel: TextChannel) =>
-                  channel.name === 'chat' || channel.name === 'geral',
-              )
-              .first()
-              .send('Você falou: ' + words)
-          }
+        )
+          .then(() => {
+            let words = handle.processFile(
+              path.resolve(`${this.appRoot}/user_audio${member.guild.id}.wav`),
+            )
+            if (words.length > 0) {
+              member.guild.channels.cache
+                .filter(
+                  (channel: TextChannel) =>
+                    channel.name === 'chat' || channel.name === 'geral',
+                )
+                .first()
+                .send('Você falou: ' + words)
+            }
 
-          console.log('Você falou: ' + words)
-        })
+            console.log('Você falou: ' + words)
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       }
     } catch (error) {
       console.error(error)
