@@ -1,6 +1,5 @@
 import { Message } from 'discord.js'
 import { inject, injectable } from 'inversify'
-import * as fs from 'fs'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 import { BotComands, SongQueue } from '../interfaces'
@@ -9,6 +8,7 @@ import { BotComands, SongQueue } from '../interfaces'
 export default class BotComandListen implements BotComands {
   private logHandler: LogHandler
   private SongQueue: Map<string, SongQueue>
+
   constructor(
     @inject(TYPES.SongQueue) SongQueue: Map<string, SongQueue>,
     @inject(TYPES.LogHandler) logHandler: LogHandler,
@@ -21,25 +21,23 @@ export default class BotComandListen implements BotComands {
     try {
       const guild = message.guild
       let songQueue = this.SongQueue.get(guild.id)
+      const voiceChannel = message.member.voice.channel
       if (!songQueue) {
-        const voiceChannel = message.member.voice.channel
         songQueue = {
           textChannel: message.channel,
           voiceChannel: voiceChannel,
           connection: null,
+          connection2: null,
           songs: [],
           volume: 5,
           playing: true,
         }
 
         this.SongQueue.set(message.guild.id, songQueue)
-        songQueue.connection = await voiceChannel.join()
       }
-
-      const audio = songQueue.connection.receiver.createStream(message.member, {
-        mode: 'pcm',
-      })
-      audio.pipe(fs.createWriteStream('user_audio'))
+      if (songQueue.connection2 == null) {
+        songQueue.connection2 = await voiceChannel.join()
+      }
       message.reply(`Escutando audo do canal ${guild}`)
     } catch (error) {
       return this.logHandler.errorLog(error, message)

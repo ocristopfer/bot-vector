@@ -51,7 +51,7 @@ export default class LogHandler {
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log('erro: ' + err)
       })
 
     if (message) {
@@ -66,6 +66,7 @@ export default class LogHandler {
         'utf8',
         (err, data) => {
           if (err) {
+            if (err.code === 'ENOENT') resolve(null)
             reject(err)
           }
           resolve(data)

@@ -76,6 +76,7 @@ export default class MusicHandler {
         textChannel: message.channel,
         voiceChannel: voiceChannel,
         connection: null,
+        connection2: null,
         songs: [song],
         volume: 5,
         playing: true,
