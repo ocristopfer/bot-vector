@@ -18,6 +18,8 @@ export default class BotComandListen implements BotComands {
   }
 
   public execute = async (message: Message) => {
+    //Desabilitando voice recording
+    return
     try {
       const guild = message.guild
       let songQueue = this.SongQueue.get(guild.id)
