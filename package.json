@@ -1,6 +1,6 @@
 {
-  "name": "botcda",
-  "version": "1.0.0",
+  "name": "vector-bot",
+  "version": "2.0.0",
   "description": "Um simples bot para discord",
   "main": "dist/index.js",
   "bin": "dist/index.js",
@@ -9,7 +9,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@picovoice/leopard-node": "^1.0.3",
     "@types/express": "^4.17.13",
-    "@types/node": "^17.0.24",
+    "@types/node": "^17.0.31",
     "copyfiles": "^2.4.1",
     "discord.js": "^12.5.3",
     "dotenv": "^16.0.0",
