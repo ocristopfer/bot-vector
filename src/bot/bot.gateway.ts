@@ -60,8 +60,8 @@ export default class BotGateway {
 
     this.botClient.on('guildMemberSpeaking', async (member, speaking) => {
       //Desabilitando voice recording
+      //this.guildMemberSpeakingHandler.handler(member, speaking)
       return
-      this.guildMemberSpeakingHandler.handler(member, speaking)
     })
 
     this.botClient.on('message', async (message) => {

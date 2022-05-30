@@ -32,6 +32,6 @@ export default class WebService {
       https.get(urlBot, (resp) => {
         this.logHandler.log('Acorda bot')
       })
-    }, 300000) // every 5 minutes (300000)
+    }, (parseInt(process.env.BOTWAKEUPTIMEOUT) || 30) * 1000) // every 5 minutes (300000)
   }
 }
