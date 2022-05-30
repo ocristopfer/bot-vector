@@ -1,9 +1,11 @@
 import express from 'express'
 import * as https from 'https'
+import * as http from 'http'
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
 import { TYPES } from '../types'
 import LogHandler from '../handlers/log.handler'
+import * as url from 'url'
 
 /**
  * Criar servidor web para funcionamento do heroku
@@ -28,10 +30,17 @@ export default class WebService {
     })
 
     setInterval(() => {
-      const urlBot = process.env.BOTURL || 'localhost:3000'
-      https.get(urlBot, (resp) => {
-        this.logHandler.log('Acorda bot')
-      })
-    }, (parseInt(process.env.BOTWAKEUPTIMEOUT) || 30) * 1000) // every 5 minutes (300000)
+      const urlBot = process.env.BOTURL || 'http://localhost' + port
+      const uri = url.parse(urlBot, true)
+      if (uri.protocol === 'https:') {
+        https.get(urlBot, () => {
+          this.logHandler.log('Acorda bot')
+        })
+      } else {
+        http.get(urlBot, () => {
+          this.logHandler.log('Acorda bot')
+        })
+      }
+    }, (parseInt(process.env.BOTWAKEUPTIMEOUT) || 30) * 60000)
   }
 }
