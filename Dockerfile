@@ -13,7 +13,9 @@ COPY package*.json ./
 RUN apk add g++ make py3-pip
 
 ## Executa npm install para adicionar as dependências e criar a pasta node_modules
-RUN npm install 
+RUN npm install yarn
+
+RUN yarn install
 
 ## Copia tudo que está no diretório onde o arquivo Dockerfile está 
 ## para dentro da pasta /usr/app do container
