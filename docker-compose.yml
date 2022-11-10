@@ -3,7 +3,7 @@ version: "3" ## especifica a versão do docker-compose file
 services: ## Define um serviço
   app: ## nome do serviço
     build: . ## localização do dockerfile
-    command: npm start ## comando a executar
+    #command: npm start ## comando a executar
     ports:
       - "3000:3000" ## redirecionamento de porta quando chegar alguma requisição na porta 3000 chama o container na porta 3000
     volumes:

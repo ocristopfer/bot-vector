@@ -21,15 +21,14 @@
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^3.14.1",
-    "typescript": "^4.6.3",
     "youtube-v3-api": "^1.1.1",
     "ytdl-core": "^4.10.0"
   },
   "scripts": {
-    "start": "yarn build && node dist/index.js",
+    "start": "npm run build && node dist/index.js",
     "debug": "nodemon --ignore src/logs/ src/index.ts",
-    "build": "tsc --build && yarn copyhtml",
-    "clean": "tsc --build --clean",
+    "build": "npx tsc --build && npm run copyhtml",
+    "clean": "npx tsc --build --clean",
     "test": "npx jest",
     "copyhtml": "copyfiles -u 1 src/public/* dist/"
   },
@@ -37,13 +36,18 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^27.4.1",
-    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.19.0",
-    "eslint": "^8.13.0",
+    "eslint": "^8.27.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-promise": "^6.1.1",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.6.2",
     "ts-jest": "^27.1.4",
-    "ts-mockito": "^2.6.1"
+    "ts-mockito": "^2.6.1",
+    "typescript": "^4.8.4"
   }
 }
