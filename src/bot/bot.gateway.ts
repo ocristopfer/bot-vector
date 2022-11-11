@@ -64,7 +64,7 @@ export default class BotGateway {
       return
     })
 
-    this.botClient.on('message', async (message) => {
+    this.botClient.on('messageCreate', async (message) => {
       this.botComandsHandler.handle(message)
     })
   }

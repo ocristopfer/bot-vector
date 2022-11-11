@@ -3,6 +3,10 @@ import { inject, injectable } from 'inversify'
 import { LogHandler } from '../../handlers'
 import { TYPES } from '../../types'
 import { BotComands, SongQueue } from '../interfaces'
+import {
+  DiscordGatewayAdapterCreator,
+  joinVoiceChannel,
+} from '@discordjs/voice'
 
 @injectable()
 export default class BotComandListen implements BotComands {
@@ -36,6 +40,12 @@ export default class BotComandListen implements BotComands {
         }
 
         this.SongQueue.set(message.guild.id, songQueue)
+        songQueue.connection = joinVoiceChannel({
+          channelId: message.channel.id,
+          guildId: guild.id,
+          adapterCreator:
+            guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
+        })
       }
       if (songQueue.connection2 == null) {
         songQueue.connection2 = await voiceChannel.join()
