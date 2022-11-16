@@ -1,5 +1,5 @@
 import ytdl from 'ytdl-core'
-import { Message } from 'discord.js'
+import { Message, PermissionFlagsBits } from 'discord.js'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../types'
 import LogHandler from '../../handlers/log.handler'
@@ -200,7 +200,7 @@ export default class MusicHandler {
         'Você precisar está em um canal de voz para reproduzir musicas!',
       )
     const permissions = voiceChannel.permissionsFor(message.client.user)
-    if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+    if (!permissions.has(PermissionFlagsBits.Connect) || !permissions.has(PermissionFlagsBits.Speak)) {
       return message.reply(
         'I need the permissions to join and speak in your voice channel!',
       )

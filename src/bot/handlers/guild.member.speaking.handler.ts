@@ -43,7 +43,7 @@ export default class GuildMemberSpeakingHandler {
             let words = handle.processFile(
               path.resolve(`${this.appRoot}/user_audio${member.guild.id}.wav`),
             )
-            if (words.length > 0) {
+            if (words.words.length > 0) {
               member.guild.channels.cache
                 .filter(
                   (channel: TextChannel) =>

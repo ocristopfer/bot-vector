@@ -10,13 +10,13 @@ WORKDIR /usr/app
 COPY package*.json ./
 
 # Install python/pip
-RUN apk add g++ make py3-pip
+#RUN apk add g++ make py3-pip
 
 ## Executa npm install para adicionar as dependências e criar a pasta node_modules
-RUN npm install -g typescript
+#RUN npm install -g typescript
 
 #adds
-RUN npm install
+#RUN npm install
 
 
 ## Copia tudo que está no diretório onde o arquivo Dockerfile está 
@@ -30,4 +30,3 @@ EXPOSE 3000/tcp
 
 ## Não se repete no Dockerfile
 ## Executa o comando npm start para iniciar o script que que está no package.json
-CMD npm start

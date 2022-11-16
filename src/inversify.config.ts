@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Client, Intents } from 'discord.js'
+import { Client, GatewayIntentBits } from 'discord.js'
 import { Container } from 'inversify'
 import { YoutubeDataAPI } from 'youtube-v3-api'
 import Bot from './bot/bot'
@@ -134,7 +134,7 @@ container
 container.bind<string>(TYPES.AppRoot).toConstantValue(path.resolve(__dirname))
 container.bind<Client>(TYPES.Client).toConstantValue(
   new Client({
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
   }),
 )
 
