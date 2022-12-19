@@ -55,7 +55,7 @@ export default class BotGateway {
     })
 
     this.botClient.on('voiceStateUpdate', async (oldMember, newMember) => {
-      this.userChangeChannelHandler.handler(oldMember, newMember)
+      // this.userChangeChannelHandler.handler(oldMember, newMember)
     })
 
     this.botClient.on('guildMemberSpeaking', async (member, speaking) => {
