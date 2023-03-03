@@ -23,7 +23,7 @@
     "tsconfig-paths": "^3.14.1",
     "typescript": "^4.8.4",
     "youtube-v3-api": "^1.1.1",
-    "ytdl-core": "^4.10.0"
+    "ytdl-core": "^4.11.2"
   },
   "scripts": {
     "start": "npm run build && node dist/index.js",
