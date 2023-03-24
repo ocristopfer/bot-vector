@@ -6,6 +6,7 @@ import * as path from 'path'
 import { TYPES } from '../types'
 import LogHandler from '../handlers/log.handler'
 import * as url from 'url'
+import fs from "fs";
 
 /**
  * Criar servidor web para funcionamento do heroku
@@ -25,7 +26,10 @@ export default class WebService {
       res.sendFile(path.join(__dirname, './../public/index.html'))
     })
 
-    app.listen(port, () => {
+    https.createServer( {
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },app).listen(port, () => {
       this.logHandler.log('Web Service Iniciado!')
     })
 
