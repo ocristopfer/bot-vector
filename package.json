@@ -28,10 +28,11 @@
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "debug": "nodemon --ignore src/logs/ src/index.ts",
-    "build": "npx tsc --build && npm run copyhtml",
+    "build": "npx tsc --build && npm run copyhtml && npm run copyssl",
     "clean": "npx tsc --build --clean",
     "test": "npx jest",
-    "copyhtml": "copyfiles -u 1 src/public/* dist/"
+    "copyhtml": "copyfiles -u 1 src/public/* dist/",
+    "copyssl": "copyfiles -u 1 src/ssl/* dist/"
   },
   "author": "@ocristopfer",
   "license": "ISC",

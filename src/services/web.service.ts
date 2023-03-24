@@ -27,8 +27,8 @@ export default class WebService {
     })
 
     https.createServer( {
-      key: fs.readFileSync("key.pem"),
-      cert: fs.readFileSync("cert.pem"),
+      key: fs.readFileSync(path.join(__dirname, './../ssl/key.pem')),
+      cert: fs.readFileSync(path.join(__dirname, './../ssl/cert.pem')),
     },app).listen(port, () => {
       this.logHandler.log('Web Service Iniciado!')
     })
